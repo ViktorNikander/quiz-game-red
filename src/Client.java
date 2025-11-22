@@ -44,7 +44,6 @@ public class Client extends JFrame implements ActionListener {
         top.add(blackTop);
         top.add(blackBottom);
 
-
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -61,8 +60,23 @@ public class Client extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
     }
-    private void changeView1(){
-
+    private void changeToBlue(){
+        bottom.removeAll();
+        bottom.add(question);
+        validate();
+        repaint();
+    }
+    private void changeToRed(){
+        bottom.removeAll();
+        bottom.add(answerAlternatives);
+        validate();
+        repaint();
+    }
+    private void changeToBlack(){
+        bottom.removeAll();
+        bottom.add(subjectAlternatives);
+        validate();
+        repaint();
     }
     public static void main(String[] args) {
         Client c = new Client();
@@ -71,5 +85,12 @@ public class Client extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("button pressed");
+        if (e.getSource() == blueTop || e.getSource() == blueBottom){
+            changeToBlue();
+        } else if (e.getSource() == redBottom || e.getSource() == redTop) {
+            changeToRed();
+        } else if (e.getSource() == blackBottom || e.getSource() == blackTop) {
+            changeToBlack();
+        }
     }
 }
