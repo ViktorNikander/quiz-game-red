@@ -14,6 +14,9 @@ public class Client extends JFrame implements ActionListener {
     JButton b2 = new JButton();
     JButton b3 = new JButton();
     JButton b4 = new JButton();
+    JLabel text = new JLabel();
+    Object outgoing;
+    Object incoming;
 
     Client(){
         add(base);
@@ -31,9 +34,6 @@ public class Client extends JFrame implements ActionListener {
              ObjectInputStream ois = new ObjectInputStream(s.getInputStream())){
 
                 System.out.println("standing by");
-
-                Object outgoing;
-                Object incoming;
 
                 incoming = ois.readObject();
                 System.out.println(incoming);
@@ -70,11 +70,30 @@ public class Client extends JFrame implements ActionListener {
     }
 
     private void displayQuestion(Subject subject){
-
+        base.removeAll();
+        text.setText(subject.getQuestionList().get(0).getQuestion());
+        base.add(text);
+        b1.setText(subject.getQuestionList().get(0).getAnswer());
+        base.add(b1);
+        b2.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(0));
+        base.add(b2);
+        b3.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(1));
+        base.add(b3);
+        b4.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(2));
+        base.add(b4);
+        revalidate();
+        repaint();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        System.out.println("button pressed");
+        JButton buttonPressed = (JButton)e.getSource();
+        GamePackage gamePackage = (GamePackage) incoming;
+        for (Subject subject : gamePackage.getSubjectAlternatives()){
+            if (buttonPressed.getText().equalsIgnoreCase(subject.getSubject())){
+                displayQuestion(subject);
+            }
+        }
     }
 }
