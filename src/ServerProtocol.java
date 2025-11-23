@@ -16,8 +16,11 @@ public class ServerProtocol {
         } else if (STATE == SUBJECT) {
             STATE = QUESTION;
             Collections.shuffle(qb.getSubjectList());
-
-            return null;
+            GamePackage gp = new GamePackage();
+            for (int i = 0; i < 3; i++) {
+                gp.getSubjectAlternatives().add(qb.getSubjectList().get(i));
+            }
+            return gp;
         } else if (STATE == QUESTION) {
             STATE = SUBJECT;
             return null;

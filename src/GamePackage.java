@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamePackage {
+public class GamePackage implements Serializable {
     private List<Subject> subjectAlternatives = new ArrayList<>();
 
     public List<Subject> getSubjectAlternatives() {

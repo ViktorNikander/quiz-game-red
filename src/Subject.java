@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class Subject {
+public class Subject implements Serializable {
     private String subject;
     private List<Question> questionList;
 

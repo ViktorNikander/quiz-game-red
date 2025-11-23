@@ -10,39 +10,17 @@ import java.net.UnknownHostException;
 
 public class Client extends JFrame implements ActionListener {
     JPanel base = new JPanel(new GridLayout(3,1));
-    JPanel question = new JPanel();
-    JPanel answerAlternatives = new JPanel();
-    JPanel subjectAlternatives = new JPanel();
-    JPanel top = new JPanel();
-    JPanel bottom = new JPanel();
-    JButton blueTop = new JButton("Change to blue at top");
-    JButton redTop = new JButton("Change to blue at bottom");
-    JButton blueBottom = new JButton("Change to red at top");
-    JButton redBottom = new JButton("Change to red at bottom");
-    JButton blackTop = new JButton("Change to black at top");
-    JButton blackBottom = new JButton("Change to black at bottom");
+    JButton b1 = new JButton();
+    JButton b2 = new JButton();
+    JButton b3 = new JButton();
+    JButton b4 = new JButton();
 
     Client(){
         add(base);
-        question.setBackground(Color.BLUE);
-        answerAlternatives.setBackground(Color.RED);
-        subjectAlternatives.setBackground(Color.black);
-
-        base.add(top);
-        base.add(bottom);
-
-        blueTop.addActionListener(this);
-        blueBottom.addActionListener(this);
-        redTop.addActionListener(this);
-        redBottom.addActionListener(this);
-        blackTop.addActionListener(this);
-        blackBottom.addActionListener(this);
-        top.add(blueTop);
-        top.add(blueBottom);
-        top.add(redTop);
-        top.add(redBottom);
-        top.add(blackTop);
-        top.add(blackBottom);
+        b1.addActionListener(this);
+        b2.addActionListener(this);
+        b3.addActionListener(this);
+        b4.addActionListener(this);
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,7 +37,11 @@ public class Client extends JFrame implements ActionListener {
 
                 incoming = ois.readObject();
                 System.out.println(incoming);
-
+                incoming = ois.readObject();
+                if (incoming instanceof GamePackage){
+                    GamePackage gp = (GamePackage) incoming;
+                    chooseSubject(gp);
+                }
                 while (true){
 
                 }
@@ -71,37 +53,28 @@ public class Client extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
     }
-    private void changeToBlue(){
-        bottom.removeAll();
-        bottom.add(question);
-        validate();
-        repaint();
-    }
-    private void changeToRed(){
-        bottom.removeAll();
-        bottom.add(answerAlternatives);
-        validate();
-        repaint();
-    }
-    private void changeToBlack(){
-        bottom.removeAll();
-        bottom.add(subjectAlternatives);
-        validate();
-        repaint();
-    }
     public static void main(String[] args) {
         Client c = new Client();
     }
 
+    private void chooseSubject(GamePackage gamePackage){
+        base.removeAll();
+        b1.setText(gamePackage.getSubjectAlternatives().get(0).getSubject());
+        base.add(b1);
+        b2.setText(gamePackage.getSubjectAlternatives().get(1).getSubject());
+        base.add(b2);
+        b3.setText(gamePackage.getSubjectAlternatives().get(2).getSubject());
+        base.add(b3);
+        revalidate();
+        repaint();
+    }
+
+    private void displayQuestion(Subject subject){
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("button pressed");
-        if (e.getSource() == blueTop || e.getSource() == blueBottom){
-            changeToBlue();
-        } else if (e.getSource() == redBottom || e.getSource() == redTop) {
-            changeToRed();
-        } else if (e.getSource() == blackBottom || e.getSource() == blackTop) {
-            changeToBlack();
-        }
+
     }
 }

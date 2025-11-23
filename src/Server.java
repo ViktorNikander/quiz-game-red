@@ -24,6 +24,7 @@ public class Server extends Thread{
             outgoing = sp.gameLoop();
             oos.writeObject(outgoing);
             outgoing = sp.gameLoop();
+            oos.writeObject(outgoing);
             while ((incoming = ois.readObject()) != null){
 
             }

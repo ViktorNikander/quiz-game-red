@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionBank {
+public class QuestionBank implements Serializable {
     private List<Subject> subjectList = new ArrayList<>();
 
     public QuestionBank() {
