@@ -53,10 +53,21 @@ public class Client extends JFrame implements ActionListener {
              ObjectInputStream ois = new ObjectInputStream(s.getInputStream())){
 
                 System.out.println("standing by");
-                while (true);
+
+                Object outgoing;
+                Object incoming;
+
+                incoming = ois.readObject();
+                System.out.println(incoming);
+
+                while (true){
+
+                }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

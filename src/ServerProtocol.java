@@ -1,3 +1,5 @@
+import java.util.Collections;
+
 public class ServerProtocol {
     private final int INITIAL = 0;
     private final int SUBJECT = 1;
@@ -13,6 +15,8 @@ public class ServerProtocol {
             return "CONNECTED";
         } else if (STATE == SUBJECT) {
             STATE = QUESTION;
+            Collections.shuffle(qb.getSubjectList());
+
             return null;
         } else if (STATE == QUESTION) {
             STATE = SUBJECT;

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionBank {
-    private List<Subject> subjectList;
+    private List<Subject> subjectList = new ArrayList<>();
 
     public QuestionBank() {
         Question q1 = new Question("First?", "1", List.of("2", "3", "4"));
