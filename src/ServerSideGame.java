@@ -13,6 +13,7 @@ public class ServerSideGame extends Thread{
 
     @Override
     public void run() {
+        System.out.println("Two clients connected");
         //TODO game logic
     }
 }
