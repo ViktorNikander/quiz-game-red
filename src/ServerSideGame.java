@@ -1,4 +1,4 @@
-public class ServerSideGame {
+public class ServerSideGame extends Thread{
     private ServerSidePlayer firstPlayer;
     private ServerSidePlayer secondPlayer;
     private ServerSidePlayer currentPlayer;
@@ -9,5 +9,10 @@ public class ServerSideGame {
         this.currentPlayer = firstPlayer;
         this.firstPlayer.setOpponent(secondPlayer);
         this.secondPlayer.setOpponent(firstPlayer);
+    }
+
+    @Override
+    public void run() {
+        //TODO game logic
     }
 }
