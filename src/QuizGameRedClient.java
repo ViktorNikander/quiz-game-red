@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client extends JFrame implements ActionListener {
+public class QuizGameRedClient extends JFrame{
     JPanel base = new JPanel(new GridLayout(3,1));
     JButton b1 = new JButton();
     JButton b2 = new JButton();
@@ -18,12 +18,7 @@ public class Client extends JFrame implements ActionListener {
     Object outgoing;
     Object incoming;
 
-    Client(){
-        add(base);
-        b1.addActionListener(this);
-        b2.addActionListener(this);
-        b3.addActionListener(this);
-        b4.addActionListener(this);
+    public QuizGameRedClient(){
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -54,7 +49,7 @@ public class Client extends JFrame implements ActionListener {
         }
     }
     public static void main(String[] args) {
-        Client c = new Client();
+        QuizGameRedClient c = new QuizGameRedClient();
     }
 
     private void chooseSubject(GamePackage gamePackage){
@@ -83,17 +78,5 @@ public class Client extends JFrame implements ActionListener {
         base.add(b4);
         revalidate();
         repaint();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("button pressed");
-        JButton buttonPressed = (JButton)e.getSource();
-        GamePackage gamePackage = (GamePackage) incoming;
-        for (Subject subject : gamePackage.getSubjectAlternatives()){
-            if (buttonPressed.getText().equalsIgnoreCase(subject.getSubject())){
-                displayQuestion(subject);
-            }
-        }
     }
 }
