@@ -10,6 +10,8 @@ public class ServerSideGame extends Thread{
     private QuestionBank questionBank = new QuestionBank();
     private int nrOfQuestions;
     private int nrOfRounds;
+    private Object outgoing;
+    private Object incoming;
 
     public ServerSideGame(ServerSidePlayer firstPlayer, ServerSidePlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -34,7 +36,23 @@ public class ServerSideGame extends Thread{
 
     @Override
     public void run() {
-        System.out.println("Two clients connected");
+        System.out.println("game with two players started");
         //TODO game logic
+        int test = 0;
+        outgoing = test;
+        System.out.println("value is at: " + outgoing);
+        currentPlayer.send(outgoing);
+        System.out.println("sent value");
+        while ((incoming = currentPlayer.receive()) != null){
+            test = (Integer) incoming;
+            outgoing = test;
+            if (currentPlayer == firstPlayer){
+                currentPlayer = secondPlayer;
+            } else {
+                currentPlayer = firstPlayer;
+            }
+            System.out.println("value is at: " + outgoing);
+            currentPlayer.send(outgoing);
+        }
     }
 }

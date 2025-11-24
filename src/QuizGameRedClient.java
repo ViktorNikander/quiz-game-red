@@ -8,37 +8,30 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class QuizGameRedClient extends JFrame{
-    JPanel base = new JPanel(new GridLayout(3,1));
-    JButton b1 = new JButton();
-    JButton b2 = new JButton();
-    JButton b3 = new JButton();
-    JButton b4 = new JButton();
-    JLabel text = new JLabel();
+public class QuizGameRedClient extends JFrame implements ActionListener {
+    JPanel base = new JPanel();
+    JLabel currentValue = new JLabel();
+    JButton button = new JButton();
+    ObjectOutputStream output;
+    ObjectInputStream input;
     Object outgoing;
     Object incoming;
 
     public QuizGameRedClient(){
-
+        add(base);
+        button.addActionListener(this);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
-        try (Socket s = new Socket("127.0.0.1", 55555);
-             ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-             ObjectInputStream ois = new ObjectInputStream(s.getInputStream())){
-
-                System.out.println("standing by");
-
-                incoming = ois.readObject();
-                System.out.println(incoming);
-                incoming = ois.readObject();
-                if (incoming instanceof GamePackage){
-                    GamePackage gp = (GamePackage) incoming;
-                    chooseSubject(gp);
-                }
-                while (true){
-
+        try (Socket s = new Socket("127.0.0.1", 55555)){
+                output = new ObjectOutputStream(s.getOutputStream());
+                input = new ObjectInputStream(s.getInputStream());
+                System.out.println("standing by for game to start");
+                while ((incoming = input.readObject()) != null){
+                    System.out.println("received value");
+                    drawButton(incoming);
+                    System.out.println("method called");
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -48,35 +41,32 @@ public class QuizGameRedClient extends JFrame{
             throw new RuntimeException(e);
         }
     }
+
+    private void drawButton(Object incoming) {
+        currentValue.setText("Current value: " + incoming);
+        System.out.println(currentValue.getText());
+        base.add(currentValue);
+        base.add(button);
+        revalidate();
+        repaint();
+    }
+
     public static void main(String[] args) {
         QuizGameRedClient c = new QuizGameRedClient();
     }
 
-    private void chooseSubject(GamePackage gamePackage){
-        base.removeAll();
-        b1.setText(gamePackage.getSubjectAlternatives().get(0).getSubject());
-        base.add(b1);
-        b2.setText(gamePackage.getSubjectAlternatives().get(1).getSubject());
-        base.add(b2);
-        b3.setText(gamePackage.getSubjectAlternatives().get(2).getSubject());
-        base.add(b3);
-        revalidate();
-        repaint();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("button pressed");
+        sendUpdate();
     }
 
-    private void displayQuestion(Subject subject){
-        base.removeAll();
-        text.setText(subject.getQuestionList().get(0).getQuestion());
-        base.add(text);
-        b1.setText(subject.getQuestionList().get(0).getAnswer());
-        base.add(b1);
-        b2.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(0));
-        base.add(b2);
-        b3.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(1));
-        base.add(b3);
-        b4.setText(subject.getQuestionList().get(0).getWrongAnswersList().get(2));
-        base.add(b4);
-        revalidate();
-        repaint();
+    private void sendUpdate() {
+        outgoing = (Integer) incoming + 1;
+        try {
+            output.writeObject(outgoing);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
