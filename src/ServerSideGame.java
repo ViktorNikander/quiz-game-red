@@ -24,6 +24,8 @@ public class ServerSideGame extends Thread{
 
         try{
             p.load(new FileInputStream("src/GameSettings.properties"));
+            nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
+            nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
