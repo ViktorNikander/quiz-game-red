@@ -11,8 +11,7 @@ public class ServerSideGame extends Thread{
     GamePackage gamePackage = new GamePackage(new QuestionBank());
     private int nrOfQuestions;
     private int nrOfRounds;
-    private Object outgoing;
-    private Object incoming;
+    private int nrOfSubjects;
 
     public ServerSideGame(ServerSidePlayer firstPlayer, ServerSidePlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -33,7 +32,9 @@ public class ServerSideGame extends Thread{
 
         nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
         nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
+        nrOfSubjects = Integer.parseInt(p.getProperty("subjectsPerChoice"));
         gamePackage.setNrOfQuestions(nrOfQuestions);
+        gamePackage.setNrOfSubjects(nrOfSubjects);
     }
 
     @Override

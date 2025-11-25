@@ -7,6 +7,15 @@ public class GamePackage implements Serializable {
     private QuestionBank questionBank = new QuestionBank();
     private Subject chosenSubjectForRound;
     private int nrOfQuestions;
+    private int nrOfSubjects;
+
+    public int getNrOfSubjects() {
+        return nrOfSubjects;
+    }
+
+    public void setNrOfSubjects(int nrOfSubjects) {
+        this.nrOfSubjects = nrOfSubjects;
+    }
 
     public GamePackage(QuestionBank questionBank) {
         this.questionBank = questionBank;
