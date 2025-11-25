@@ -10,6 +10,8 @@ public class ServerSidePlayer {
     private ObjectOutputStream output;
     private ObjectInputStream input;
 
+    private int score = 0;
+
     public ServerSidePlayer(Socket socket, String player) {
         this.socket = socket;
         this.player = player;
@@ -21,6 +23,17 @@ public class ServerSidePlayer {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public int getScore() {
+        return score;
+    }
+    public void resetScore() {
+        score = 0;
+    }
+
+    public void addScorePoint() {
+        score++;
     }
 
     public void send(Object outgoing){
