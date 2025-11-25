@@ -8,7 +8,6 @@ public class ServerSideGame extends Thread{
     private ServerSidePlayer firstPlayer;
     private ServerSidePlayer secondPlayer;
     private ServerSidePlayer currentPlayer;
-    private QuestionBank questionBank = new QuestionBank();
     GamePackage gamePackage = new GamePackage(new QuestionBank());
     private int nrOfQuestions;
     private int nrOfRounds;
@@ -26,16 +25,15 @@ public class ServerSideGame extends Thread{
 
         try{
             p.load(new FileInputStream("src/GameSettings.properties"));
-            nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
-            nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        this.nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
-        this.nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
+        nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
+        nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
+        gamePackage.setNrOfQuestions(nrOfQuestions);
     }
 
     @Override
@@ -46,15 +44,14 @@ public class ServerSideGame extends Thread{
     }
 
     private void oneRound() {
-        Collections.shuffle(questionBank.getSubjectList());
-        currentPlayer.send();
-        currentPlayer.receive();
+        gamePackage.shuffleAll();
+        currentPlayer.send(gamePackage);
+        //TODO client side choose and store subject in gamePackage
+        gamePackage = (GamePackage) currentPlayer.receive();
+
         /*
-        Shuffle subjects
-        Send three subjects to current player
-        Receive chosen subject from current player
-        Store chosen subject
-        Shuffle questions of chosen subject
+        Shuffle all in game package
+        Send game package to current player
         Store #nrOfQuestions on server side
         Send #nrOfQuestions to current player
         Receive and store score

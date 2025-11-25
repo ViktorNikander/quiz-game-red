@@ -4,10 +4,28 @@ import java.util.Collections;
 import java.util.List;
 
 public class GamePackage implements Serializable {
-    QuestionBank questionBank = new QuestionBank();
+    private QuestionBank questionBank = new QuestionBank();
+    private Subject chosenSubjectForRound;
+    private int nrOfQuestions;
 
     public GamePackage(QuestionBank questionBank) {
         this.questionBank = questionBank;
+    }
+
+    public int getNrOfQuestions() {
+        return nrOfQuestions;
+    }
+
+    public void setNrOfQuestions(int nrOfQuestions) {
+        this.nrOfQuestions = nrOfQuestions;
+    }
+
+    public Subject getChosenSubjectForRound() {
+        return chosenSubjectForRound;
+    }
+
+    public void setChosenSubjectForRound(Subject chosenSubjectForRound) {
+        this.chosenSubjectForRound = chosenSubjectForRound;
     }
 
     public QuestionBank getQuestionBank() {
