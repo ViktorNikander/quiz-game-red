@@ -48,7 +48,10 @@ public class ServerSideGame extends Thread{
         currentPlayer.send(gamePackage);
         //TODO client side choose and store subject in gamePackage
         gamePackage = (GamePackage) currentPlayer.receive();
-
+        changeCurrentPlayer();
+        currentPlayer.send(gamePackage);
+        gamePackage = (GamePackage) currentPlayer.receive();
+        gamePackage.setChosenSubjectForRound(null);
         /*
         Shuffle all in game package
         Send game package to current player
@@ -59,5 +62,13 @@ public class ServerSideGame extends Thread{
         Send Subject and questions to current player
         Receive and store score
          */
+    }
+
+    private void changeCurrentPlayer() {
+        if (currentPlayer == firstPlayer){
+            currentPlayer = secondPlayer;
+        }else {
+            currentPlayer = firstPlayer;
+        }
     }
 }

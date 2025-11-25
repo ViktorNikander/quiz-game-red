@@ -16,6 +16,7 @@ public class QuizGameRedClient extends JFrame implements ActionListener {
     ObjectInputStream input;
     Object outgoing;
     Object incoming;
+    GamePackage gamePackage;
 
     public QuizGameRedClient(){
         add(base);
@@ -25,13 +26,20 @@ public class QuizGameRedClient extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setSize(500, 500);
         try (Socket s = new Socket("127.0.0.1", 55555)){
-                output = new ObjectOutputStream(s.getOutputStream());
-                input = new ObjectInputStream(s.getInputStream());
-                System.out.println("standing by for game to start");
-                while ((incoming = input.readObject()) != null){
-                    System.out.println("received value");
-                    drawButton(incoming);
-                    System.out.println("method called");
+                while ((gamePackage = (GamePackage) input.readObject()) != null){
+                    /*
+                    Receive game package
+                    Display first three subjects as buttons
+                    Store pressed subject button as current subject in game package
+                    Loop #nrOfQuestions
+                        Display question and answers in order from chosen subject as buttons
+                        Compare pressed button to correct answer and store true/false for round
+                        Change correct button to green
+                        If wrong button pressed, change it to red
+                        Sleep for short duration
+                    Update scoreboard and show it
+                    Window will hopefully "sleep" in this state until new round begins based on opponents action
+                     */
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
