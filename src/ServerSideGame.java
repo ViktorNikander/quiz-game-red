@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Properties;
 
 public class ServerSideGame extends Thread{
@@ -8,6 +9,7 @@ public class ServerSideGame extends Thread{
     private ServerSidePlayer secondPlayer;
     private ServerSidePlayer currentPlayer;
     private QuestionBank questionBank = new QuestionBank();
+    GamePackage gamePackage = new GamePackage(new QuestionBank());
     private int nrOfQuestions;
     private int nrOfRounds;
     private Object outgoing;
@@ -38,23 +40,27 @@ public class ServerSideGame extends Thread{
 
     @Override
     public void run() {
-        System.out.println("game with two players started");
-        //TODO game logic
-        int test = 0;
-        outgoing = test;
-        System.out.println("value is at: " + outgoing);
-        currentPlayer.send(outgoing);
-        System.out.println("sent value");
-        while ((incoming = currentPlayer.receive()) != null){
-            test = (Integer) incoming;
-            outgoing = test;
-            if (currentPlayer == firstPlayer){
-                currentPlayer = secondPlayer;
-            } else {
-                currentPlayer = firstPlayer;
-            }
-            System.out.println("value is at: " + outgoing);
-            currentPlayer.send(outgoing);
+        for (int i = 0; i < nrOfRounds; i++) {
+            oneRound();
         }
+    }
+
+    private void oneRound() {
+        Collections.shuffle(questionBank.getSubjectList());
+        currentPlayer.send();
+        currentPlayer.receive();
+        /*
+        Shuffle subjects
+        Send three subjects to current player
+        Receive chosen subject from current player
+        Store chosen subject
+        Shuffle questions of chosen subject
+        Store #nrOfQuestions on server side
+        Send #nrOfQuestions to current player
+        Receive and store score
+        Change current player
+        Send Subject and questions to current player
+        Receive and store score
+         */
     }
 }
