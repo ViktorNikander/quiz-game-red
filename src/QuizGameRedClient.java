@@ -8,25 +8,30 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class QuizGameRedClient extends JFrame implements ActionListener {
+public class QuizGameRedClient extends JFrame {
     JPanel base = new JPanel();
-    JLabel currentValue = new JLabel();
-    JButton button = new JButton();
     ObjectOutputStream output;
     ObjectInputStream input;
-    Object outgoing;
-    Object incoming;
     GamePackage gamePackage;
 
     public QuizGameRedClient(){
         add(base);
-        button.addActionListener(this);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
         try (Socket s = new Socket("127.0.0.1", 55555)){
                 while ((gamePackage = (GamePackage) input.readObject()) != null){
+                    if (gamePackage.getChosenSubjectForRound() == null){
+                        chooseSubject(); //TODO create method that based on action stores pressed subject as chosen subject in game package
+                    }
+                    for (int i = 0; i < gamePackage.getNrOfQuestions(); i++) {
+                        answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(i)); 
+                        //TODO create method that based on action controls if correct, stores result in game package,
+                        //TODO changes color of button, sleeps for short duration
+                    }
+                    showScoreboard(); //TODO create method that shows current score based on current score in game package
+                    //TODO check that game remains in this state until opponent plays his turn and then the loop starts over
                     /*
                     Receive game package
                     Display first three subjects as buttons
@@ -50,31 +55,14 @@ public class QuizGameRedClient extends JFrame implements ActionListener {
         }
     }
 
-    private void drawButton(Object incoming) {
-        currentValue.setText("Current value: " + incoming);
-        System.out.println(currentValue.getText());
-        base.add(currentValue);
-        base.add(button);
-        revalidate();
-        repaint();
+    private void chooseSubject() {
+        base.removeAll();
+        for (int i = 0; i < nrOfSubjectsToChooseFrom; i++) {
+            
+        }
     }
 
     public static void main(String[] args) {
         QuizGameRedClient c = new QuizGameRedClient();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("button pressed");
-        sendUpdate();
-    }
-
-    private void sendUpdate() {
-        outgoing = (Integer) incoming + 1;
-        try {
-            output.writeObject(outgoing);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
