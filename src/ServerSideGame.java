@@ -35,6 +35,7 @@ public class ServerSideGame extends Thread{
         nrOfSubjects = Integer.parseInt(p.getProperty("subjectsPerChoice"));
         gamePackage.setNrOfQuestions(nrOfQuestions);
         gamePackage.setNrOfSubjects(nrOfSubjects);
+        gamePackage.setNrOfRounds(nrOfRounds);
     }
 
     @Override
@@ -60,6 +61,7 @@ public class ServerSideGame extends Thread{
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
                 //TODO quit logic
+                System.out.println("quit");
             }
         }
     }

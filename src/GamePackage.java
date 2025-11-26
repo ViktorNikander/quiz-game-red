@@ -8,9 +8,29 @@ public class GamePackage implements Serializable {
     private Subject chosenSubjectForRound;
     private int nrOfQuestions;
     private int nrOfSubjects;
+    private int nrOfRounds;
     private String gameState;
     private boolean isFirstPlayerOnSubject = true;
     private int indexRoundsPlayed = 0;
+
+    public GamePackage(QuestionBank questionBank) {
+        this.questionBank = questionBank;
+    }
+
+    public void shuffleAll(){
+        Collections.shuffle(questionBank.getSubjectList());
+        for (Subject subject : questionBank.getSubjectList()){
+            Collections.shuffle(subject.getQuestionList());
+        }
+    }
+
+    public int getNrOfRounds() {
+        return nrOfRounds;
+    }
+
+    public void setNrOfRounds(int nrOfRounds) {
+        this.nrOfRounds = nrOfRounds;
+    }
 
     public int getIndexRoundsPlayed() {
         return indexRoundsPlayed;
@@ -36,9 +56,6 @@ public class GamePackage implements Serializable {
         this.nrOfSubjects = nrOfSubjects;
     }
 
-    public GamePackage(QuestionBank questionBank) {
-        this.questionBank = questionBank;
-    }
 
     public int getNrOfQuestions() {
         return nrOfQuestions;
@@ -62,13 +79,6 @@ public class GamePackage implements Serializable {
 
     public void setQuestionBank(QuestionBank questionBank) {
         this.questionBank = questionBank;
-    }
-
-    public void shuffleAll(){
-        Collections.shuffle(questionBank.getSubjectList());
-        for (Subject subject : questionBank.getSubjectList()){
-            Collections.shuffle(subject.getQuestionList());
-        }
     }
 
     public void setGameState(String choose) {

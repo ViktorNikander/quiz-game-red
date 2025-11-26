@@ -110,8 +110,10 @@ public class QuizGameRedClient extends JFrame {
                 gamePackage.setFirstPlayerOnSubject(true);
                 gamePackage.setGameState("subject");
             }
-            //TODO add method that checks for maximum rounds reached
             //TODO call a method that displays match history
+            if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
+                gamePackage.setGameState("quit");
+            }
         }
     }
 
