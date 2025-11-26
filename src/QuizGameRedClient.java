@@ -85,6 +85,7 @@ public class QuizGameRedClient extends JFrame {
                 JButton button = new JButton(answer);
                 button.addActionListener(e -> {
                     //TODO change color of button
+                    //TODO lock buttons after one action taken or TODO below fixes it
                     //TODO store result as match history of answer somewhere
                     System.out.println("wrong answer");
                    indexOfQuestion++;

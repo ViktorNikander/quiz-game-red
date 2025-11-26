@@ -45,6 +45,7 @@ public class ServerSideGame extends Thread{
         gamePackage.shuffleAll();
         currentPlayer.send(gamePackage);
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
+            System.out.println(gamePackage.getIndexRoundsPlayed() + " rounds played");
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
                 System.out.println("subject");
