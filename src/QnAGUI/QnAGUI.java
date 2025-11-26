@@ -1,6 +1,7 @@
 package QnAGUI;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class QnAGUI extends JPanel {
     AnswerButton a1 = new AnswerButton("Answer1", true);
@@ -8,5 +9,17 @@ public class QnAGUI extends JPanel {
     AnswerButton a3 = new AnswerButton("Answer3", false);
     AnswerButton a4 = new AnswerButton("Answer4", false);
 
-
+    public QnAGUI() {
+        setSize(600,800);
+        setLayout(new BorderLayout());
+        JPanel answerPanel = new JPanel();
+        answerPanel.setLayout(new GridLayout(2,2));
+        answerPanel.add(a1);
+        answerPanel.add(a2);
+        answerPanel.add(a3);
+        answerPanel.add(a4);
+        add(answerPanel,BorderLayout.SOUTH);
+        JLabel question = new JLabel("Question");
+        add(question,BorderLayout.CENTER);
+    }
 }
