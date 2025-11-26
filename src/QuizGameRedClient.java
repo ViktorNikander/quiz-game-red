@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class QuizGameRedClient extends JFrame implements ActionListener{
+public class QuizGameRedClient extends JFrame{
     private JPanel base = new JPanel();
     private ObjectOutputStream output;
     private ObjectInputStream input;
@@ -21,7 +21,6 @@ public class QuizGameRedClient extends JFrame implements ActionListener{
 
     public QuizGameRedClient(){
         add(base);
-        button.addActionListener(this);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
