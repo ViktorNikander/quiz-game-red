@@ -1,25 +1,21 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Properties;
 
 public class ServerSideGame extends Thread{
     private ServerSidePlayer firstPlayer;
     private ServerSidePlayer secondPlayer;
     private ServerSidePlayer currentPlayer;
-    GamePackage gamePackage = new GamePackage(new QuestionBank());
     private int nrOfQuestions;
     private int nrOfRounds;
     private int nrOfSubjects;
+    GamePackage gamePackage = new GamePackage(new QuestionBank());
 
     public ServerSideGame(ServerSidePlayer firstPlayer, ServerSidePlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.currentPlayer = firstPlayer;
-        this.firstPlayer.setOpponent(secondPlayer);
-        this.secondPlayer.setOpponent(firstPlayer);
-
         Properties p = new Properties();
 
         try{
@@ -45,23 +41,21 @@ public class ServerSideGame extends Thread{
         gamePackage.shuffleAll();
         currentPlayer.send(gamePackage);
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
-            System.out.println(gamePackage.getIndexRoundsPlayed() + " rounds played");
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
-                System.out.println("subject");
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("question")) {
-                System.out.println("question");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("switch")) {
-                System.out.println("switch");
                 changeCurrentPlayer();
                 gamePackage.setGameState("question");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
                 //TODO quit logic
+                firstPlayer.send(gamePackage);
+                secondPlayer.send(gamePackage);
                 System.out.println("quit");
             }
         }

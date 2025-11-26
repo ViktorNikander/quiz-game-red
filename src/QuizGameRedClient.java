@@ -7,12 +7,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class QuizGameRedClient extends JFrame {
+    private JPanel base = new JPanel();
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
+    private GamePackage gamePackage;
+    private String gameState;
     private int indexOfQuestion = 0;
-    JPanel base = new JPanel();
-    ObjectOutputStream output;
-    ObjectInputStream input;
-    GamePackage gamePackage;
-    String gameState;
 
     public QuizGameRedClient(){
         add(base);
@@ -20,20 +20,23 @@ public class QuizGameRedClient extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
+
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
                 while (true){
                     gamePackage = (GamePackage) input.readObject();
-                    System.out.println("received from server");
                     gameState = gamePackage.getGameState();
                     if (gameState.equalsIgnoreCase("subject")){
                         chooseSubject();
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
-                    } else if (gameState.equalsIgnoreCase("switch")) {
                     } else if (gameState.equalsIgnoreCase("quit")) {
-                        //TODO quit logic
+                        //TODO inform user the game is over or enable restart direct from client
+                        base.removeAll();
+                        revalidate();
+                        repaint();
+                        System.out.println("quit");
                     }
                 }
         } catch (UnknownHostException e) {
@@ -46,15 +49,12 @@ public class QuizGameRedClient extends JFrame {
     }
 
     private void chooseSubject() {
-        System.out.println("inside chooseSubject()");
         base.removeAll();
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
             JButton button = new JButton(subject.getSubject());
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
-                System.out.println(subject.getSubject() + " chosen");
-                System.out.println("sending to server");
                 gamePackage.setGameState("question");
                 send(gamePackage);
             });
@@ -65,7 +65,6 @@ public class QuizGameRedClient extends JFrame {
     }
 
     private void answerQuestion(Question question) {
-        System.out.println("inside answerQuestion()");
         base.removeAll();
         base.add(new JLabel(question.getQuestion()));
         for (int i = 0; i < 4; i++) {
@@ -74,8 +73,8 @@ public class QuizGameRedClient extends JFrame {
                 JButton correctButton = new JButton(answer);
                 correctButton.addActionListener(e -> {
                     //TODO change color of button
-                    //TODO store result of answers somewhere
-                    System.out.println("correct answer");
+                    //TODO lock buttons after one action taken
+                    //TODO store result as match history of answer somewhere
                     indexOfQuestion++;
                     checkQuestionsRemainingForRound();
                     send(gamePackage);
@@ -85,9 +84,8 @@ public class QuizGameRedClient extends JFrame {
                 JButton button = new JButton(answer);
                 button.addActionListener(e -> {
                     //TODO change color of button
-                    //TODO lock buttons after one action taken or TODO below fixes it
+                    //TODO lock buttons after one action taken
                     //TODO store result as match history of answer somewhere
-                    System.out.println("wrong answer");
                    indexOfQuestion++;
                    checkQuestionsRemainingForRound();
                    send(gamePackage);
@@ -103,7 +101,6 @@ public class QuizGameRedClient extends JFrame {
         if (indexOfQuestion >= gamePackage.getNrOfQuestions()){
             indexOfQuestion = 0;
             if (gamePackage.isFirstPlayerOnSubject()){
-                System.out.println("");
                 gamePackage.setFirstPlayerOnSubject(false);
                 gamePackage.setGameState("switch");
             } else {

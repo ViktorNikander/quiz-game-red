@@ -6,10 +6,8 @@ import java.net.Socket;
 public class ServerSidePlayer {
     private String player;
     private Socket socket;
-    private ServerSidePlayer opponent;
     private ObjectOutputStream output;
     private ObjectInputStream input;
-
     private int score = 0;
 
     public ServerSidePlayer(Socket socket, String player) {
@@ -28,6 +26,7 @@ public class ServerSidePlayer {
     public int getScore() {
         return score;
     }
+
     public void resetScore() {
         score = 0;
     }
@@ -56,13 +55,5 @@ public class ServerSidePlayer {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-
-    public void setOpponent(ServerSidePlayer opponent) {
-        this.opponent = opponent;
-    }
-
-    public ServerSidePlayer getOpponent() {
-        return opponent;
     }
 }
