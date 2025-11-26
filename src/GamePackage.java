@@ -8,6 +8,7 @@ public class GamePackage implements Serializable {
     private Subject chosenSubjectForRound;
     private int nrOfQuestions;
     private int nrOfSubjects;
+    private String gameState;
 
     public int getNrOfSubjects() {
         return nrOfSubjects;
@@ -50,5 +51,13 @@ public class GamePackage implements Serializable {
         for (Subject subject : questionBank.getSubjectList()){
             Collections.shuffle(subject.getQuestionList());
         }
+    }
+
+    public void setGameState(String choose) {
+        this.gameState = choose;
+    }
+
+    public String getGameState() {
+        return gameState;
     }
 }

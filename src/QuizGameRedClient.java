@@ -10,7 +10,7 @@ public class QuizGameRedClient extends JFrame {
     ObjectOutputStream output;
     ObjectInputStream input;
     GamePackage gamePackage;
-    boolean holdExecution = true;
+    String gameState;
 
     public QuizGameRedClient(){
         add(base);
@@ -22,36 +22,15 @@ public class QuizGameRedClient extends JFrame {
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
                 while ((gamePackage = (GamePackage) input.readObject()) != null){
-                    System.out.println(gamePackage.getChosenSubjectForRound());
-                    if (gamePackage.getChosenSubjectForRound() == null){
-                        System.out.println("inside if");
-                        chooseSubject(); //TODO create method that based on action stores pressed subject as chosen subject in game package
+                    System.out.println("received from server");
+                    gameState = gamePackage.getGameState();
+                    if (gameState.equalsIgnoreCase("subject")){
+                        chooseSubject();
+                    } else if (gameState.equalsIgnoreCase("question")) {
+                    } else if (gameState.equalsIgnoreCase("switch")) {
+                    } else if (gameState.equalsIgnoreCase("quit")) {
+                        //TODO quit logic
                     }
-//                    while (holdExecution){
-//                        System.out.println("inside hold, holdExectuion is: " + holdExecution);
-//                    }
-                    System.out.println("chosen subject is: " + gamePackage.getChosenSubjectForRound().getSubject());
-                    for (int i = 0; i < gamePackage.getNrOfQuestions(); i++) {
-                        answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(i));
-                        //TODO create method that based on action controls if correct, stores result in game package,
-                        //TODO changes color of button, sleeps for short duration
-                    }
-                    while (true);
-//                    showScoreboard(); //TODO create method that shows current score based on current score in game package
-                    //TODO check that game remains in this state until opponent plays his turn and then the loop starts over
-                    /*
-                    Receive game package
-                    Display first three subjects as buttons
-                    Store pressed subject button as current subject in game package
-                    Loop #nrOfQuestions
-                        Display question and answers in order from chosen subject as buttons
-                        Compare pressed button to correct answer and store true/false for round
-                        Change correct button to green
-                        If wrong button pressed, change it to red
-                        Sleep for short duration
-                    Update scoreboard and show it
-                    Window will hopefully "sleep" in this state until new round begins based on opponents action
-                     */
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -96,23 +75,28 @@ public class QuizGameRedClient extends JFrame {
     }
 
     private void chooseSubject() {
-        System.out.println("inside chooseSubject");
+        System.out.println("inside chooseSubject()");
         base.removeAll();
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
             JButton button = new JButton(subject.getSubject());
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
-                System.out.println(subject.getSubject());
-                holdExecution = false;
-                System.out.println(holdExecution);
+                System.out.println(subject.getSubject() + " chosen");
+                System.out.println("sending to server");
+                send(gamePackage);
             });
             base.add(button);
         }
         revalidate();
         repaint();
-        while (gamePackage.getChosenSubjectForRound() == null){
-            System.out.println("inside method while loop");
+    }
+
+    private void send(GamePackage gamePackage) {
+        try {
+            output.writeObject(gamePackage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

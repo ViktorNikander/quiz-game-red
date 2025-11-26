@@ -39,8 +39,36 @@ public class ServerSideGame extends Thread{
 
     @Override
     public void run() {
-        for (int i = 0; i < nrOfRounds; i++) {
-            oneRound();
+        String gameState = "subject";
+        gamePackage.setGameState(gameState);
+        System.out.println("subject to current");
+        gamePackage.shuffleAll();
+        currentPlayer.send(gamePackage);
+        while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
+            System.out.println("current set subject to: " + gamePackage.getChosenSubjectForRound().getSubject());
+            gameState = gamePackage.getGameState();
+            if (gameState.equalsIgnoreCase("subject")){
+                //TODO  shuffle all, send game package to current player so it can choose a subject
+                gamePackage.setGameState("subject");
+                changeCurrentPlayer();
+                System.out.println("changed current player");
+                System.out.println("subject to current");
+                currentPlayer.send(gamePackage);
+            } else if (gameState.equalsIgnoreCase("question")) {
+                //TODO send game package to current player so it can choose a answer to question
+                gamePackage.setGameState("question");
+                System.out.println("question to current");
+                currentPlayer.send(gamePackage);
+            } else if (gameState.equalsIgnoreCase("switch")) {
+                //TODO change current player
+                gamePackage.shuffleAll();
+                gamePackage.setGameState("subject");
+                System.out.println("subject to next player");
+                changeCurrentPlayer();
+                currentPlayer.send(gamePackage);
+            } else if (gameState.equalsIgnoreCase("quit")) {
+                //TODO quit logic
+            }
         }
     }
 

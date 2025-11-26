@@ -7,9 +7,9 @@ public class QuestionBank implements Serializable {
 
     public QuestionBank() {
         Question q1 = new Question("First?", "1", "2", "3", "4");
-        Question q2 = new Question("First?", "2", "1", "3", "4");
-        Question q3 = new Question("First?", "3", "2", "1", "4");
-        Question q4 = new Question("First?", "4", "2", "3", "1");
+        Question q2 = new Question("Second?", "2", "1", "3", "4");
+        Question q3 = new Question("Third?", "3", "2", "1", "4");
+        Question q4 = new Question("Fourth?", "4", "2", "3", "1");
         List<Question> questionList = new ArrayList<>();
         questionList.add(q1);
         questionList.add(q2);
