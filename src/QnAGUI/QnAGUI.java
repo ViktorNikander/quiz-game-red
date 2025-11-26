@@ -8,6 +8,7 @@ public class QnAGUI extends JPanel {
     AnswerButton a2 = new AnswerButton("Answer2", false);
     AnswerButton a3 = new AnswerButton("Answer3", false);
     AnswerButton a4 = new AnswerButton("Answer4", false);
+    Question q = new Question("Question1");
 
     public QnAGUI() {
         setSize(600,800);
@@ -19,7 +20,7 @@ public class QnAGUI extends JPanel {
         answerPanel.add(a3);
         answerPanel.add(a4);
         add(answerPanel,BorderLayout.SOUTH);
-        JLabel question = new JLabel("Question");
+        JLabel question = q;
         add(question,BorderLayout.CENTER);
     }
 }

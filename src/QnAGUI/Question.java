@@ -1,9 +1,11 @@
 package QnAGUI;
 
-public class Question {
-    private String question;
+import javax.swing.*;
+
+public class Question extends JLabel {
 
     public Question(String question) {
-        this.question = question;
+        setText(question);
+
     }
 }
