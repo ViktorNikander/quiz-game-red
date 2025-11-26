@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -6,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class QuizGameRedClient extends JFrame {
+    private int indexOfQuestion = 0;
     JPanel base = new JPanel();
     ObjectOutputStream output;
     ObjectInputStream input;
@@ -21,12 +23,14 @@ public class QuizGameRedClient extends JFrame {
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
-                while ((gamePackage = (GamePackage) input.readObject()) != null){
+                while (true){
+                    gamePackage = (GamePackage) input.readObject();
                     System.out.println("received from server");
                     gameState = gamePackage.getGameState();
                     if (gameState.equalsIgnoreCase("subject")){
                         chooseSubject();
                     } else if (gameState.equalsIgnoreCase("question")) {
+                        answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
                     } else if (gameState.equalsIgnoreCase("switch")) {
                     } else if (gameState.equalsIgnoreCase("quit")) {
                         //TODO quit logic
@@ -41,39 +45,6 @@ public class QuizGameRedClient extends JFrame {
         }
     }
 
-    private void answerQuestion(Question question) {
-        base.removeAll();
-        base.add(new JLabel(question.getQuestion()));
-        for (int i = 0; i < 4; i++) {
-            String answer = question.getAllAnswers().get(i);
-            if (answer.equalsIgnoreCase(question.getAnswer())){
-                JButton correctButton = new JButton(answer);
-                correctButton.addActionListener(e -> {
-                    //TODO add action for pressing correct button
-                    setPressedSubject(correctButton.getText());
-                });
-                base.add(correctButton);
-            } else {
-                JButton button = new JButton(answer);
-                button.addActionListener(e -> {
-                    setPressedSubject(button.getText());
-                    //TODO add action for pressing wrong button
-                });
-                base.add(button);
-            }
-        }
-        revalidate();
-        repaint();
-    }
-
-    private void setPressedSubject(String pressedSubject) {
-        for (Subject subject:gamePackage.getQuestionBank().getSubjectList()) {
-            if (subject.getSubject().equalsIgnoreCase(pressedSubject)) {
-                gamePackage.setChosenSubjectForRound(subject);
-            }
-        }
-    }
-
     private void chooseSubject() {
         System.out.println("inside chooseSubject()");
         base.removeAll();
@@ -84,12 +55,64 @@ public class QuizGameRedClient extends JFrame {
                 gamePackage.setChosenSubjectForRound(subject);
                 System.out.println(subject.getSubject() + " chosen");
                 System.out.println("sending to server");
+                gamePackage.setGameState("question");
                 send(gamePackage);
             });
             base.add(button);
         }
         revalidate();
         repaint();
+    }
+
+    private void answerQuestion(Question question) {
+        System.out.println("inside answerQuestion()");
+        base.removeAll();
+        base.add(new JLabel(question.getQuestion()));
+        for (int i = 0; i < 4; i++) {
+            String answer = question.getAllAnswers().get(i);
+            if (answer.equalsIgnoreCase(question.getAnswer())){
+                JButton correctButton = new JButton(answer);
+                correctButton.addActionListener(e -> {
+                    //TODO change color of button
+                    //TODO store result of answers somewhere
+                    System.out.println("correct answer");
+                    indexOfQuestion++;
+                    checkQuestionsRemainingForRound();
+                    send(gamePackage);
+                });
+                base.add(correctButton);
+            } else {
+                JButton button = new JButton(answer);
+                button.addActionListener(e -> {
+                    //TODO change color of button
+                    //TODO store result as match history of answer somewhere
+                    System.out.println("wrong answer");
+                   indexOfQuestion++;
+                   checkQuestionsRemainingForRound();
+                   send(gamePackage);
+                });
+                base.add(button);
+            }
+        }
+        revalidate();
+        repaint();
+    }
+
+    private void checkQuestionsRemainingForRound() {
+        if (indexOfQuestion >= gamePackage.getNrOfQuestions()){
+            indexOfQuestion = 0;
+            if (gamePackage.isFirstPlayerOnSubject()){
+                System.out.println("");
+                gamePackage.setFirstPlayerOnSubject(false);
+                gamePackage.setGameState("switch");
+            } else {
+                gamePackage.setIndexRoundsPlayed(gamePackage.getIndexRoundsPlayed() + 1);
+                gamePackage.setFirstPlayerOnSubject(true);
+                gamePackage.setGameState("subject");
+            }
+            //TODO add method that checks for maximum rounds reached
+            //TODO call a method that displays match history
+        }
     }
 
     private void send(GamePackage gamePackage) {

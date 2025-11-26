@@ -9,6 +9,24 @@ public class GamePackage implements Serializable {
     private int nrOfQuestions;
     private int nrOfSubjects;
     private String gameState;
+    private boolean isFirstPlayerOnSubject = true;
+    private int indexRoundsPlayed = 0;
+
+    public int getIndexRoundsPlayed() {
+        return indexRoundsPlayed;
+    }
+
+    public void setIndexRoundsPlayed(int indexRoundsPlayed) {
+        this.indexRoundsPlayed = indexRoundsPlayed;
+    }
+
+    public boolean isFirstPlayerOnSubject() {
+        return isFirstPlayerOnSubject;
+    }
+
+    public void setFirstPlayerOnSubject(boolean firstPlayerOnSubject) {
+        isFirstPlayerOnSubject = firstPlayerOnSubject;
+    }
 
     public int getNrOfSubjects() {
         return nrOfSubjects;
