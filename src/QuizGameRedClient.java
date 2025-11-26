@@ -1,3 +1,5 @@
+import QnAGUI.QnAGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ public class QuizGameRedClient extends JFrame implements ActionListener {
     ObjectInputStream input;
     Object outgoing;
     Object incoming;
+    QnAGUI  qnAGUI = new QnAGUI();
 
     public QuizGameRedClient(){
         add(base);
@@ -24,6 +27,7 @@ public class QuizGameRedClient extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
+        add(qnAGUI,BorderLayout.SOUTH);
         try (Socket s = new Socket("127.0.0.1", 55555)){
                 output = new ObjectOutputStream(s.getOutputStream());
                 input = new ObjectInputStream(s.getInputStream());
