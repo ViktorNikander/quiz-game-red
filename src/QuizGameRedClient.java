@@ -27,9 +27,9 @@ public class QuizGameRedClient extends JFrame {
                         System.out.println("inside if");
                         chooseSubject(); //TODO create method that based on action stores pressed subject as chosen subject in game package
                     }
-                    while (holdExecution){
-                        System.out.println("inside hold, holdExectuion is: " + holdExecution);
-                    }
+//                    while (holdExecution){
+//                        System.out.println("inside hold, holdExectuion is: " + holdExecution);
+//                    }
                     System.out.println("chosen subject is: " + gamePackage.getChosenSubjectForRound().getSubject());
                     for (int i = 0; i < gamePackage.getNrOfQuestions(); i++) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(i));
@@ -111,6 +111,9 @@ public class QuizGameRedClient extends JFrame {
         }
         revalidate();
         repaint();
+        while (gamePackage.getChosenSubjectForRound() == null){
+            System.out.println("inside method while loop");
+        }
     }
 
     public static void main(String[] args) {

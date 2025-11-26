@@ -47,7 +47,6 @@ public class ServerSideGame extends Thread{
     private void oneRound() {
         gamePackage.shuffleAll();
         currentPlayer.send(gamePackage);
-        //TODO client side choose and store subject in gamePackage
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
 
         }
