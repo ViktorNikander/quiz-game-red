@@ -46,7 +46,6 @@ public class ServerSideGame extends Thread{
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
-                //TODO  shuffle all, send game package to current player so it can choose a subject
                 System.out.println("subject");
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
@@ -63,29 +62,6 @@ public class ServerSideGame extends Thread{
                 //TODO quit logic
             }
         }
-    }
-
-    private void oneRound() {
-        gamePackage.shuffleAll();
-        currentPlayer.send(gamePackage);
-        while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
-
-        }
-        System.out.println("passed while loop");
-        changeCurrentPlayer();
-        currentPlayer.send(gamePackage);
-        gamePackage = (GamePackage) currentPlayer.receive();
-        gamePackage.setChosenSubjectForRound(null);
-        /*
-        Shuffle all in game package
-        Send game package to current player
-        Store #nrOfQuestions on server side
-        Send #nrOfQuestions to current player
-        Receive and store score
-        Change current player
-        Send Subject and questions to current player
-        Receive and store score
-         */
     }
 
     private void changeCurrentPlayer() {
