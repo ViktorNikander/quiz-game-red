@@ -1,26 +1,32 @@
+import QnAGUI.QnAGUI;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class QuizGameRedClient extends JFrame {
+public class QuizGameRedClient extends JFrame implements ActionListener{
     private JPanel base = new JPanel();
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
+    QnAGUI  qnAGUI = new QnAGUI();
 
     public QuizGameRedClient(){
         add(base);
+        button.addActionListener(this);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
-
+        add(qnAGUI,BorderLayout.SOUTH);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
