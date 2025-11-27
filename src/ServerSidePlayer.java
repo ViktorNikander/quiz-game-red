@@ -9,6 +9,8 @@ public class ServerSidePlayer {
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private int score = 0;
+    private int correctAnswers = 0;
+    private int wrongAnswers = 0;
 
     public ServerSidePlayer(Socket socket, String player) {
         this.socket = socket;
@@ -33,6 +35,19 @@ public class ServerSidePlayer {
 
     public void addScorePoint() {
         score++;
+    }
+
+    public void addCorrectAnswer() {
+        correctAnswers++;
+    }
+    public void addWrongAnswer() {
+        wrongAnswers++;
+    }
+    public int getCorrectAnswers() {
+        return correctAnswers;
+    }
+    public int getWrongAnswers() {
+        return wrongAnswers;
     }
 
     public void send(Object outgoing){
