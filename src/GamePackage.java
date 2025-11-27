@@ -10,10 +10,17 @@ public class GamePackage implements Serializable {
     private String gameState;
     private boolean isFirstPlayerOnSubject = true;
     private int indexRoundsPlayed = 0;
-    private int lastAnswerCorrect = 0;
+    private int lastAnswerCorrect = -1;
 
     public GamePackage(QuestionBank questionBank) {
         this.questionBank = questionBank;
+    }
+
+    public int getLastAnswerCorrect() {
+        return lastAnswerCorrect;
+    }
+    public void setLastAnswerCorrect(int lastAnswerCorrect) {
+        this.lastAnswerCorrect = lastAnswerCorrect;
     }
 
     public void shuffleAll(){
