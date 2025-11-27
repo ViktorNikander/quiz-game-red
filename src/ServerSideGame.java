@@ -41,6 +41,15 @@ public class ServerSideGame extends Thread{
         gamePackage.shuffleAll();
         currentPlayer.send(gamePackage);
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
+            int result = gamePackage.getLastAnswerCorrect();
+            if (result == -1) {
+                currentPlayer.addCorrectAnswer();
+            }else if (result == 0) {
+                currentPlayer.addWrongAnswer();
+            }
+
+            gamePackage.setLastAnswerCorrect(-1);
+
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
                 gamePackage.shuffleAll();
@@ -56,6 +65,12 @@ public class ServerSideGame extends Thread{
                 //TODO quit logic
                 firstPlayer.send(gamePackage);
                 secondPlayer.send(gamePackage);
+
+                System.out.println("Game over!");
+                System.out.println("Player 1 - RÄTT: " + firstPlayer.getCorrectAnswers()
+                + ", FEL: " + firstPlayer.getWrongAnswers());
+                System.out.println("Second player - Rätt: " + secondPlayer.getCorrectAnswers()
+                        + ", Fel: " + secondPlayer.getWrongAnswers())
                 System.out.println("quit");
             }
         }
