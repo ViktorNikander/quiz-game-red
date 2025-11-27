@@ -74,6 +74,7 @@ public class QuizGameRedClient extends JFrame{
             if (answer.equalsIgnoreCase(question.getAnswer())){
                 JButton correctButton = new JButton(answer);
                 correctButton.addActionListener(e -> {
+                    gamePackage.setLastAnswerCorrect(1);
                     //TODO change color of button
                     //TODO lock buttons after one action taken
                     //TODO store result as match history of answer somewhere
@@ -85,6 +86,7 @@ public class QuizGameRedClient extends JFrame{
             } else {
                 JButton button = new JButton(answer);
                 button.addActionListener(e -> {
+                    gamePackage.setLastAnswerCorrect(0);
                     //TODO change color of button
                     //TODO lock buttons after one action taken
                     //TODO store result as match history of answer somewhere
