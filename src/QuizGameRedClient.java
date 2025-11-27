@@ -76,14 +76,17 @@ public class QuizGameRedClient extends JFrame{
                     correctButton.setBackground(Color.GREEN);
                     correctButton.setOpaque(true);
 
-                    javax.swing.Timer timer = new javax.swing.Timer(800, event -> {
+                    runAfterDelay(800, () -> {
                         indexOfQuestion++;
                         checkQuestionsRemainingForRound();
-                        send(gamePackage);
+                        if (gamePackage.isFirstPlayerOnSubject()){
+                            runAfterDelay(800, () -> {
+                                send(gamePackage);
+                            });
+                        } else {
+                            send(gamePackage);
+                        }
                     });
-
-                    timer.setRepeats(false);
-                    timer.start();
                 });
                 base.add(correctButton);
             } else {
@@ -93,14 +96,17 @@ public class QuizGameRedClient extends JFrame{
                     button.setBackground(Color.RED);
                     button.setOpaque(true);
 
-                    javax.swing.Timer timer = new javax.swing.Timer(800, event -> {
+                    runAfterDelay(800, () -> {
                         indexOfQuestion++;
                         checkQuestionsRemainingForRound();
-                        send(gamePackage);
+                        if (gamePackage.isFirstPlayerOnSubject()){
+                            runAfterDelay(800, () -> {
+                                send(gamePackage);
+                            });
+                        } else {
+                            send(gamePackage);
+                        }
                     });
-
-                    timer.setRepeats(false);
-                    timer.start();
                 });
                 base.add(button);
             }
@@ -141,12 +147,6 @@ public class QuizGameRedClient extends JFrame{
         base.add(new JLabel("display match history"));
         revalidate();
         repaint();
-        System.out.println("insinde match history");
-
-        new Timer(2000, e -> {
-            System.out.println("stand by");
-            // code that should run after 2 seconds
-        }).setRepeats(false);
     }
 
     private void send(GamePackage gamePackage) {
@@ -155,6 +155,12 @@ public class QuizGameRedClient extends JFrame{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void runAfterDelay(int delayMillisec, Runnable action) {
+        javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
+        timer.setRepeats(false);
+        timer.start();
     }
 
     public static void main(String[] args) {
