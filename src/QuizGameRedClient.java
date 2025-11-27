@@ -74,7 +74,6 @@ public class QuizGameRedClient extends JFrame{
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
-                    correctButton.setOpaque(true);
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -94,7 +93,6 @@ public class QuizGameRedClient extends JFrame{
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
-                    button.setOpaque(true);
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
