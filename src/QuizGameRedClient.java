@@ -26,8 +26,7 @@ public class QuizGameRedClient extends JFrame{
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
-                while (true){
-                    gamePackage = (GamePackage) input.readObject();
+                while ((gamePackage = (GamePackage) input.readObject()) != null){
                     gameState = gamePackage.getGameState();
                     if (gameState.equalsIgnoreCase("subject")){
                         chooseSubject();
@@ -35,9 +34,7 @@ public class QuizGameRedClient extends JFrame{
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
                     } else if (gameState.equalsIgnoreCase("quit")) {
                         //TODO inform user the game is over or enable restart direct from client
-                        base.removeAll();
-                        revalidate();
-                        repaint();
+                        showMatchHistory();
                         System.out.println("quit");
                     }
                 }
@@ -74,31 +71,53 @@ public class QuizGameRedClient extends JFrame{
             if (answer.equalsIgnoreCase(question.getAnswer())){
                 JButton correctButton = new JButton(answer);
                 correctButton.addActionListener(e -> {
-                    gamePackage.setLastAnswerCorrect(1);
-                    //TODO change color of button
-                    //TODO lock buttons after one action taken
-                    //TODO store result as match history of answer somewhere
-                    indexOfQuestion++;
-                    checkQuestionsRemainingForRound();
-                    send(gamePackage);
+                    lockButtons();
+                    correctButton.setBackground(Color.GREEN);
+
+                    runAfterDelay(800, () -> {
+                        indexOfQuestion++;
+                        checkQuestionsRemainingForRound();
+                        if (gamePackage.isFirstPlayerOnSubject()){
+                            runAfterDelay(800, () -> {
+                                send(gamePackage);
+                            });
+                        } else {
+                            send(gamePackage);
+                        }
+                    });
                 });
                 base.add(correctButton);
             } else {
                 JButton button = new JButton(answer);
                 button.addActionListener(e -> {
-                    gamePackage.setLastAnswerCorrect(0);
-                    //TODO change color of button
-                    //TODO lock buttons after one action taken
-                    //TODO store result as match history of answer somewhere
-                   indexOfQuestion++;
-                   checkQuestionsRemainingForRound();
-                   send(gamePackage);
+                    lockButtons();
+                    button.setBackground(Color.RED);
+
+                    runAfterDelay(800, () -> {
+                        indexOfQuestion++;
+                        checkQuestionsRemainingForRound();
+                        if (gamePackage.isFirstPlayerOnSubject()){
+                            runAfterDelay(800, () -> {
+                                send(gamePackage);
+                            });
+                        } else {
+                            send(gamePackage);
+                        }
+                    });
                 });
                 base.add(button);
             }
         }
         revalidate();
         repaint();
+    }
+
+    private void lockButtons(){
+        for (Component c : base.getComponents()) {
+            if (c instanceof JButton) {
+                c.setEnabled(false);
+            }
+        }
     }
 
     private void checkQuestionsRemainingForRound() {
@@ -113,10 +132,18 @@ public class QuizGameRedClient extends JFrame{
                 gamePackage.setGameState("subject");
             }
             //TODO call a method that displays match history
+            showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
                 gamePackage.setGameState("quit");
             }
         }
+    }
+
+    private void showMatchHistory() {
+        base.removeAll();
+        base.add(new JLabel("display match history"));
+        revalidate();
+        repaint();
     }
 
     private void send(GamePackage gamePackage) {
@@ -125,6 +152,12 @@ public class QuizGameRedClient extends JFrame{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void runAfterDelay(int delayMillisec, Runnable action) {
+        javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
+        timer.setRepeats(false);
+        timer.start();
     }
 
     public static void main(String[] args) {
