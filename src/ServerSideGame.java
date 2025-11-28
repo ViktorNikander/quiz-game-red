@@ -32,6 +32,7 @@ public class ServerSideGame extends Thread{
         gamePackage.setNrOfQuestions(nrOfQuestions);
         gamePackage.setNrOfSubjects(nrOfSubjects);
         gamePackage.setNrOfRounds(nrOfRounds);
+        gamePackage.setMatchHistory(new MatchHistory(nrOfRounds));
     }
 
     @Override

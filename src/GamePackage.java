@@ -11,9 +11,18 @@ public class GamePackage implements Serializable {
     private boolean isFirstPlayerOnSubject = true;
     private int indexRoundsPlayed = 0;
     private int lastAnswerCorrect = -1;
+    private MatchHistory matchHistory;
 
     public GamePackage(QuestionBank questionBank) {
         this.questionBank = questionBank;
+    }
+
+    public MatchHistory getMatchHistory() {
+        return matchHistory;
+    }
+
+    public void setMatchHistory(MatchHistory matchHistory) {
+        this.matchHistory = matchHistory;
     }
 
     public int getLastAnswerCorrect() {

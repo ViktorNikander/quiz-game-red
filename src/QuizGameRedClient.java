@@ -33,7 +33,12 @@ public class QuizGameRedClient extends JFrame{
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
                     } else if (gameState.equalsIgnoreCase("quit")) {
-                        //TODO inform user the game is over or enable restart direct from client
+                        int i = 1;
+                        for (RoundHistory round : gamePackage.getMatchHistory().getRoundHistoryList()){
+                            System.out.println("round " + round.getSubject() + " " + i);
+                            System.out.println(round.getAnswerHistory());
+                            i++;
+                        }
                         showMatchHistory();
                         System.out.println("quit");
                     }
@@ -48,6 +53,9 @@ public class QuizGameRedClient extends JFrame{
     }
 
     private void chooseSubject() {
+
+        System.out.println("index of rounds played is: " + gamePackage.getIndexRoundsPlayed());
+
         base.removeAll();
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
@@ -55,6 +63,8 @@ public class QuizGameRedClient extends JFrame{
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
                 gamePackage.setGameState("question");
+                gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed())
+                        .setSubject(gamePackage.getChosenSubjectForRound().getSubject());
                 send(gamePackage);
             });
             base.add(button);
@@ -64,6 +74,9 @@ public class QuizGameRedClient extends JFrame{
     }
 
     private void answerQuestion(Question question) {
+
+        System.out.println("index of rounds played is: " + gamePackage.getIndexRoundsPlayed());
+
         base.removeAll();
         base.add(new JLabel(question.getQuestion()));
         for (int i = 0; i < 4; i++) {
@@ -73,6 +86,8 @@ public class QuizGameRedClient extends JFrame{
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(true);
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -92,6 +107,8 @@ public class QuizGameRedClient extends JFrame{
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(false);
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
