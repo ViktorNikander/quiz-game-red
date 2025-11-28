@@ -131,7 +131,6 @@ public class QuizGameRedClient extends JFrame{
                 gamePackage.setFirstPlayerOnSubject(true);
                 gamePackage.setGameState("subject");
             }
-            //TODO call a method that displays match history
             showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
                 gamePackage.setGameState("quit");
