@@ -19,8 +19,8 @@ public class QnAGUI extends JPanel {
         answerPanel.add(a2);
         answerPanel.add(a3);
         answerPanel.add(a4);
-        add(answerPanel,BorderLayout.SOUTH);
+        add(answerPanel,BorderLayout.CENTER);
         JLabel question = q;
-        add(question,BorderLayout.CENTER);
+        add(question,BorderLayout.NORTH);
     }
 }
