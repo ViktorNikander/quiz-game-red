@@ -69,7 +69,7 @@ public class ServerSideGame extends Thread{
                 System.out.println("Player 1 - Correct: " + firstPlayer.getCorrectAnswers()
                 + ", Incorrect: " + firstPlayer.getWrongAnswers());
                 System.out.println("Second player - Correct: " + secondPlayer.getCorrectAnswers()
-                        + ", Incorrect: " + secondPlayer.getWrongAnswers())
+                        + ", Incorrect: " + secondPlayer.getWrongAnswers());
                 System.out.println("quit");
             }
         }
