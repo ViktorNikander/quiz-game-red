@@ -62,15 +62,14 @@ public class ServerSideGame extends Thread{
                 gamePackage.setGameState("question");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
-                //TODO quit logic
                 firstPlayer.send(gamePackage);
                 secondPlayer.send(gamePackage);
 
                 System.out.println("Game over!");
-                System.out.println("Player 1 - RÄTT: " + firstPlayer.getCorrectAnswers()
-                + ", FEL: " + firstPlayer.getWrongAnswers());
-                System.out.println("Second player - Rätt: " + secondPlayer.getCorrectAnswers()
-                        + ", Fel: " + secondPlayer.getWrongAnswers())
+                System.out.println("Player 1 - Correct: " + firstPlayer.getCorrectAnswers()
+                + ", Incorrect: " + firstPlayer.getWrongAnswers());
+                System.out.println("Second player - Correct: " + secondPlayer.getCorrectAnswers()
+                        + ", Incorrect: " + secondPlayer.getWrongAnswers())
                 System.out.println("quit");
             }
         }
