@@ -65,6 +65,7 @@ public class QuizGameRedClient extends JFrame{
 
     private void answerQuestion(Question question) {
         base.removeAll();
+        //Work here
         base.add(new JLabel(question.getQuestion()));
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
