@@ -27,6 +27,9 @@ public class GamePackage implements Serializable {
         Collections.shuffle(questionBank.getSubjectList());
         for (Subject subject : questionBank.getSubjectList()){
             Collections.shuffle(subject.getQuestionList());
+            for (Question question : subject.getQuestionList()){
+                Collections.shuffle(question.getAllAnswers());
+            }
         }
     }
 
