@@ -1,5 +1,3 @@
-import MatchHistory.RoundHistory;
-import QnAGUI.QnAGUI;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -15,15 +13,13 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
-    QnAGUI  qnAGUI = new QnAGUI();
 
     public QuizGameRedClient(){
         add(base);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(500, 500);
-        add(qnAGUI,BorderLayout.SOUTH);
+        setSize(500, 600);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -70,11 +66,26 @@ public class QuizGameRedClient extends JFrame{
 
     private void answerQuestion(Question question) {
         base.removeAll();
-        base.add(new JLabel(question.getQuestion()));
+
+        JPanel qnaPanel = new JPanel(new BorderLayout());
+        JLabel questionLabel = new JLabel(question.getQuestion());
+        JPanel answerPanel = new JPanel(new GridLayout(2, 2));
+
+        qnaPanel.setPreferredSize(new Dimension(400, 500));
+        questionLabel.setPreferredSize(new Dimension(400, 200));
+        answerPanel.setPreferredSize(new Dimension(400, 300));
+
+        questionLabel.setHorizontalAlignment(JLabel.CENTER);
+        questionLabel.setVerticalAlignment(JLabel.CENTER);
+
+        qnaPanel.add(questionLabel,BorderLayout.NORTH);
+        base.add(qnaPanel,BorderLayout.CENTER);
+
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
             if (answer.equalsIgnoreCase(question.getAnswer())){
                 JButton correctButton = new JButton(answer);
+                correctButton.setFocusPainted(false);
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
@@ -93,9 +104,10 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(correctButton);
+                answerPanel.add(correctButton);
             } else {
                 JButton button = new JButton(answer);
+                button.setFocusPainted(false);
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
@@ -114,17 +126,27 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(button);
+                answerPanel.add(button);
             }
         }
+        qnaPanel.add(answerPanel,BorderLayout.CENTER);
+        base.add(qnaPanel,BorderLayout.CENTER);
         revalidate();
         repaint();
     }
 
     private void lockButtons(){
         for (Component c : base.getComponents()) {
-            if (c instanceof JButton) {
-                c.setEnabled(false);
+            if (c instanceof JPanel) {
+                for (Component b : ((JPanel) c).getComponents()) {
+                    if (b instanceof JPanel) {
+                        for (Component bs : ((JPanel) b).getComponents()) {
+                            if (bs instanceof JButton) {
+                                bs.setEnabled(false);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
