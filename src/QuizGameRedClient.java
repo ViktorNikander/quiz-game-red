@@ -15,7 +15,6 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
-    QnAGUI  qnAGUI = new QnAGUI();
 
     public QuizGameRedClient(){
         add(base);
@@ -23,7 +22,6 @@ public class QuizGameRedClient extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 500);
-        add(qnAGUI,BorderLayout.SOUTH);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -71,7 +69,10 @@ public class QuizGameRedClient extends JFrame{
     private void answerQuestion(Question question) {
         base.removeAll();
         //Work here
-        base.add(new JLabel(question.getQuestion()));
+        JPanel qnaPanel = new JPanel(new BorderLayout());
+        qnaPanel.add(new JLabel(question.getQuestion()), BorderLayout.NORTH);
+        JPanel answerPanel = new JPanel(new GridLayout(2, 2));
+        base.add(qnaPanel,BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
             if (answer.equalsIgnoreCase(question.getAnswer())){
@@ -94,7 +95,7 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(correctButton);
+                answerPanel.add(correctButton);
             } else {
                 JButton button = new JButton(answer);
                 button.addActionListener(e -> {
@@ -115,9 +116,11 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(button);
+                answerPanel.add(button);
             }
         }
+        qnaPanel.add(answerPanel,BorderLayout.CENTER);
+        base.add(qnaPanel,BorderLayout.CENTER);
         revalidate();
         repaint();
     }
