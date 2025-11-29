@@ -20,8 +20,4 @@ public class MatchHistory extends JPanel {
     public List<RoundHistory> getRoundHistoryList() {
         return roundHistoryList;
     }
-
-    public void setRoundHistoryList(List<RoundHistory> roundHistoryList) {
-        this.roundHistoryList = roundHistoryList;
-    }
 }

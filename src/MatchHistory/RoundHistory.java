@@ -48,7 +48,6 @@ public class RoundHistory extends JPanel {
         if (currentPlayer.equalsIgnoreCase("second")){
             indexOfQuestion= indexOfQuestion + nrOfQuestions + 1;
         }
-        System.out.println(indexOfQuestion);
         if (isCorrect){
             panelList.get(indexOfQuestion).setBackground(Color.GREEN);
         } else {

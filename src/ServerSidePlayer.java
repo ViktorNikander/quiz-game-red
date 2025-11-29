@@ -30,10 +30,6 @@ public class ServerSidePlayer{
         return player;
     }
 
-    public void setPlayer(String player) {
-        this.player = player;
-    }
-
     public int getScore() {
         return score;
     }

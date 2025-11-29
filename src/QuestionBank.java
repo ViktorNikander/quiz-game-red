@@ -25,15 +25,7 @@ public class QuestionBank implements Serializable {
         subjectList.add(s4);
     }
 
-    public QuestionBank(List<Subject> subjectList) {
-        this.subjectList = subjectList;
-    }
-
     public List<Subject> getSubjectList() {
         return subjectList;
-    }
-
-    public void setSubjectList(List<Subject> subjectList) {
-        this.subjectList = subjectList;
     }
 }
