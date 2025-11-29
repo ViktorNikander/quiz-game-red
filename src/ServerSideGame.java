@@ -1,6 +1,9 @@
+import MatchHistory.MatchHistory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Properties;
 
 public class ServerSideGame extends Thread{
@@ -10,7 +13,7 @@ public class ServerSideGame extends Thread{
     private int nrOfQuestions;
     private int nrOfRounds;
     private int nrOfSubjects;
-    GamePackage gamePackage = new GamePackage(new QuestionBank());
+    GamePackage gamePackage;
 
     public ServerSideGame(ServerSidePlayer firstPlayer, ServerSidePlayer secondPlayer) {
         this.firstPlayer = firstPlayer;
@@ -29,9 +32,11 @@ public class ServerSideGame extends Thread{
         nrOfQuestions = Integer.parseInt(p.getProperty("questionsPerRound", "2"));
         nrOfRounds = Integer.parseInt(p.getProperty("roundsPerGame", "2"));
         nrOfSubjects = Integer.parseInt(p.getProperty("subjectsPerChoice"));
+        gamePackage = new GamePackage(new QuestionBank(), currentPlayer.getPlayer());
         gamePackage.setNrOfQuestions(nrOfQuestions);
         gamePackage.setNrOfSubjects(nrOfSubjects);
         gamePackage.setNrOfRounds(nrOfRounds);
+        gamePackage.setMatchHistory(new MatchHistory(nrOfRounds, nrOfQuestions));
     }
 
     @Override
@@ -52,6 +57,8 @@ public class ServerSideGame extends Thread{
 
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
+                System.out.println("inside subject");
+                changeCurrentPlayer();
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
                 currentPlayer.send(gamePackage);
@@ -60,6 +67,10 @@ public class ServerSideGame extends Thread{
             } else if (gameState.equalsIgnoreCase("switch")) {
                 changeCurrentPlayer();
                 gamePackage.setGameState("question");
+                currentPlayer.send(gamePackage);
+            } else if (gameState.equalsIgnoreCase("send update")) {
+                changeCurrentPlayer();
+                gamePackage.setGameState("get update");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
                 firstPlayer.send(gamePackage);
@@ -78,8 +89,10 @@ public class ServerSideGame extends Thread{
     private void changeCurrentPlayer() {
         if (currentPlayer == firstPlayer){
             currentPlayer = secondPlayer;
+            gamePackage.setCurrentPlayer(currentPlayer.getPlayer());
         }else {
             currentPlayer = firstPlayer;
+            gamePackage.setCurrentPlayer(currentPlayer.getPlayer());
         }
     }
 }

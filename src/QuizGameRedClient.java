@@ -1,3 +1,4 @@
+import MatchHistory.RoundHistory;
 import QnAGUI.QnAGUI;
 import javax.swing.*;
 import java.awt.*;
@@ -32,11 +33,14 @@ public class QuizGameRedClient extends JFrame{
                         chooseSubject();
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
+                    } else if (gameState.equalsIgnoreCase("get update")) {
+                        showMatchHistory();
+                        gamePackage.setGameState("subject");
+                        send(gamePackage);
                     } else if (gameState.equalsIgnoreCase("quit")) {
-                        //TODO inform user the game is over or enable restart direct from client
                         showMatchHistory();
                         System.out.println("quit");
-                    }
+                        }
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -55,6 +59,7 @@ public class QuizGameRedClient extends JFrame{
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
                 gamePackage.setGameState("question");
+                gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed()).setSubject(subject.getSubject());
                 send(gamePackage);
             });
             base.add(button);
@@ -74,6 +79,8 @@ public class QuizGameRedClient extends JFrame{
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(true, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -93,6 +100,8 @@ public class QuizGameRedClient extends JFrame{
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(false, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -130,9 +139,9 @@ public class QuizGameRedClient extends JFrame{
             } else {
                 gamePackage.setIndexRoundsPlayed(gamePackage.getIndexRoundsPlayed() + 1);
                 gamePackage.setFirstPlayerOnSubject(true);
-                gamePackage.setGameState("subject");
+                gamePackage.setGameState("send update");
+                //TODO change something here to update GUI after finished round
             }
-            //TODO call a method that displays match history
             showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
                 gamePackage.setGameState("quit");
@@ -142,7 +151,8 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
-        base.add(new JLabel("display match history"));
+        base.add(gamePackage.getMatchHistory());
+        //TODO update match history for non playing player after playing player finish round.
         revalidate();
         repaint();
     }
