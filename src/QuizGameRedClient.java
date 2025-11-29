@@ -153,6 +153,7 @@ public class QuizGameRedClient extends JFrame{
     private void showMatchHistory() {
         base.removeAll();
         base.add(gamePackage.getMatchHistory());
+        //TODO update match history for non playing player after playing player finish round.
         revalidate();
         repaint();
     }
