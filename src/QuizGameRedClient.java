@@ -49,6 +49,7 @@ public class QuizGameRedClient extends JFrame{
 
     private void chooseSubject() {
         base.removeAll();
+        //Work Here
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
             JButton button = new JButton(subject.getSubject());
