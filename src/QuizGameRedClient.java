@@ -87,6 +87,7 @@ public class QuizGameRedClient extends JFrame{
             String answer = question.getAllAnswers().get(i);
             if (answer.equalsIgnoreCase(question.getAnswer())){
                 JButton correctButton = new JButton(answer);
+                correctButton.setFocusPainted(false);
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
@@ -108,6 +109,7 @@ public class QuizGameRedClient extends JFrame{
                 answerPanel.add(correctButton);
             } else {
                 JButton button = new JButton(answer);
+                button.setFocusPainted(false);
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
