@@ -57,6 +57,8 @@ public class ServerSideGame extends Thread{
 
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
+                System.out.println("inside subject");
+                changeCurrentPlayer();
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
                 currentPlayer.send(gamePackage);
@@ -65,6 +67,10 @@ public class ServerSideGame extends Thread{
             } else if (gameState.equalsIgnoreCase("switch")) {
                 changeCurrentPlayer();
                 gamePackage.setGameState("question");
+                currentPlayer.send(gamePackage);
+            } else if (gameState.equalsIgnoreCase("send update")) {
+                changeCurrentPlayer();
+                gamePackage.setGameState("get update");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
                 firstPlayer.send(gamePackage);

@@ -3,6 +3,8 @@ import java.io.Serializable;
 import java.util.Collections;
 
 public class GamePackage implements Serializable {
+    private ServerSidePlayer firstPlayer;
+    private ServerSidePlayer secondPlayer;
     private String currentPlayer;
     private QuestionBank questionBank = new QuestionBank();
     private Subject chosenSubjectForRound;
@@ -43,6 +45,22 @@ public class GamePackage implements Serializable {
                 Collections.shuffle(question.getAllAnswers());
             }
         }
+    }
+
+    public ServerSidePlayer getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public void setFirstPlayer(ServerSidePlayer firstPlayer) {
+        this.firstPlayer = firstPlayer;
+    }
+
+    public ServerSidePlayer getSecondPlayer() {
+        return secondPlayer;
+    }
+
+    public void setSecondPlayer(ServerSidePlayer secondPlayer) {
+        this.secondPlayer = secondPlayer;
     }
 
     public String getCurrentPlayer() {

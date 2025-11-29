@@ -33,10 +33,14 @@ public class QuizGameRedClient extends JFrame{
                         chooseSubject();
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
+                    } else if (gameState.equalsIgnoreCase("get update")) {
+                        showMatchHistory();
+                        gamePackage.setGameState("subject");
+                        send(gamePackage);
                     } else if (gameState.equalsIgnoreCase("quit")) {
                         showMatchHistory();
                         System.out.println("quit");
-                    }
+                        }
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -134,7 +138,8 @@ public class QuizGameRedClient extends JFrame{
             } else {
                 gamePackage.setIndexRoundsPlayed(gamePackage.getIndexRoundsPlayed() + 1);
                 gamePackage.setFirstPlayerOnSubject(true);
-                gamePackage.setGameState("subject");
+                gamePackage.setGameState("send update");
+                //TODO change something here to update GUI after finished round
             }
             showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
