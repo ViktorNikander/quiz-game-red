@@ -34,12 +34,12 @@ public class QuizGameRedClient extends JFrame{
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
                     } else if (gameState.equalsIgnoreCase("quit")) {
-                        int i = 1;
-                        for (RoundHistory round : gamePackage.getMatchHistory().getRoundHistoryList()){
-                            System.out.println("round " + round.getSubject() + " " + i);
-                            System.out.println(round.getAnswerHistory());
-                            i++;
-                        }
+//                        int i = 1;
+//                        for (RoundHistory round : gamePackage.getMatchHistory().getRoundHistoryList()){
+//                            System.out.println("round " + round.getSubject() + " " + i);
+//                            System.out.println(round.getAnswerHistory());
+//                            i++;
+//                        }
                         showMatchHistory();
                         System.out.println("quit");
                     }
