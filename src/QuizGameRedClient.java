@@ -49,17 +49,32 @@ public class QuizGameRedClient extends JFrame{
 
     private void chooseSubject() {
         base.removeAll();
-        //Work Here
+        JPanel subjectMainPanel = new JPanel(new BorderLayout());
+        JLabel subjectLabel = new JLabel("Choose Subject");
+        JPanel subjectPanel = new JPanel(new GridLayout(3, 1));
+
+        subjectMainPanel.setPreferredSize(new Dimension(400, 500));
+        subjectLabel.setPreferredSize(new Dimension(400, 120));
+        subjectPanel.setPreferredSize(new Dimension(400, 480));
+
+        subjectLabel.setHorizontalAlignment(JLabel.CENTER);
+        subjectLabel.setVerticalAlignment(JLabel.CENTER);
+
+        subjectMainPanel.add(subjectLabel, BorderLayout.NORTH);
+        subjectMainPanel.add(subjectPanel, BorderLayout.CENTER);
+        base.add(subjectMainPanel, BorderLayout.CENTER);
+
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
             JButton button = new JButton(subject.getSubject());
+            button.setFocusPainted(false);
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
                 gamePackage.setGameState("question");
                 gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed()).setSubject(subject.getSubject());
                 send(gamePackage);
             });
-            base.add(button);
+            subjectPanel.add(button);
         }
         revalidate();
         repaint();
