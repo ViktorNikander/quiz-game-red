@@ -1,9 +1,11 @@
+import MatchHistory.RoundHistory;
 import QnAGUI.QnAGUI;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -53,9 +55,6 @@ public class QuizGameRedClient extends JFrame{
     }
 
     private void chooseSubject() {
-
-        System.out.println("index of rounds played is: " + gamePackage.getIndexRoundsPlayed());
-
         base.removeAll();
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
@@ -63,8 +62,7 @@ public class QuizGameRedClient extends JFrame{
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
                 gamePackage.setGameState("question");
-                gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed())
-                        .setSubject(gamePackage.getChosenSubjectForRound().getSubject());
+                gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed()).setSubject(subject.getSubject());
                 send(gamePackage);
             });
             base.add(button);
@@ -74,9 +72,6 @@ public class QuizGameRedClient extends JFrame{
     }
 
     private void answerQuestion(Question question) {
-
-        System.out.println("index of rounds played is: " + gamePackage.getIndexRoundsPlayed());
-
         base.removeAll();
         base.add(new JLabel(question.getQuestion()));
         for (int i = 0; i < 4; i++) {
@@ -87,7 +82,7 @@ public class QuizGameRedClient extends JFrame{
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
                     gamePackage.getMatchHistory().getRoundHistoryList()
-                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(true);
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(true, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -108,7 +103,7 @@ public class QuizGameRedClient extends JFrame{
                     lockButtons();
                     button.setBackground(Color.RED);
                     gamePackage.getMatchHistory().getRoundHistoryList()
-                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(false);
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(false, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -157,7 +152,7 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
-        base.add(new JLabel("display match history"));
+        base.add(gamePackage.getMatchHistory());
         revalidate();
         repaint();
     }

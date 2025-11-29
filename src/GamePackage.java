@@ -1,7 +1,9 @@
+import MatchHistory.MatchHistory;
 import java.io.Serializable;
 import java.util.Collections;
 
 public class GamePackage implements Serializable {
+    private String currentPlayer;
     private QuestionBank questionBank = new QuestionBank();
     private Subject chosenSubjectForRound;
     private int nrOfQuestions;
@@ -13,8 +15,9 @@ public class GamePackage implements Serializable {
     private int lastAnswerCorrect = -1;
     private MatchHistory matchHistory;
 
-    public GamePackage(QuestionBank questionBank) {
+    public GamePackage(QuestionBank questionBank, String currentPlayer) {
         this.questionBank = questionBank;
+        this.currentPlayer = currentPlayer;
     }
 
     public MatchHistory getMatchHistory() {
@@ -40,6 +43,14 @@ public class GamePackage implements Serializable {
                 Collections.shuffle(question.getAllAnswers());
             }
         }
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public int getNrOfRounds() {
