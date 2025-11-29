@@ -68,17 +68,21 @@ public class QuizGameRedClient extends JFrame{
 
     private void answerQuestion(Question question) {
         base.removeAll();
-        //Work here
+
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        qnaPanel.setPreferredSize(new Dimension(400, 500));
         JLabel questionLabel = new JLabel(question.getQuestion());
+        JPanel answerPanel = new JPanel(new GridLayout(2, 2));
+
+        qnaPanel.setPreferredSize(new Dimension(400, 500));
+        questionLabel.setPreferredSize(new Dimension(400, 200));
+        answerPanel.setPreferredSize(new Dimension(400, 300));
+
         questionLabel.setHorizontalAlignment(JLabel.CENTER);
         questionLabel.setVerticalAlignment(JLabel.CENTER);
-        questionLabel.setPreferredSize(new Dimension(400, 200));
+
         qnaPanel.add(questionLabel,BorderLayout.NORTH);
-        JPanel answerPanel = new JPanel(new GridLayout(2, 2));
-        answerPanel.setPreferredSize(new Dimension(400, 300));
         base.add(qnaPanel,BorderLayout.CENTER);
+
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
             if (answer.equalsIgnoreCase(question.getAnswer())){
