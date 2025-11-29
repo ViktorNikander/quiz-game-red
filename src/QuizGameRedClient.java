@@ -21,7 +21,7 @@ public class QuizGameRedClient extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(500, 500);
+        setSize(500, 600);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -70,8 +70,14 @@ public class QuizGameRedClient extends JFrame{
         base.removeAll();
         //Work here
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        qnaPanel.add(new JLabel(question.getQuestion()), BorderLayout.NORTH);
+        qnaPanel.setPreferredSize(new Dimension(400, 500));
+        JLabel questionLabel = new JLabel(question.getQuestion());
+        questionLabel.setHorizontalAlignment(JLabel.CENTER);
+        questionLabel.setVerticalAlignment(JLabel.CENTER);
+        questionLabel.setPreferredSize(new Dimension(400, 200));
+        qnaPanel.add(questionLabel,BorderLayout.NORTH);
         JPanel answerPanel = new JPanel(new GridLayout(2, 2));
+        answerPanel.setPreferredSize(new Dimension(400, 300));
         base.add(qnaPanel,BorderLayout.CENTER);
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
