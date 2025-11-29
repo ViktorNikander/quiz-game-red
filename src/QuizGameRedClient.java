@@ -137,8 +137,16 @@ public class QuizGameRedClient extends JFrame{
 
     private void lockButtons(){
         for (Component c : base.getComponents()) {
-            if (c instanceof JButton) {
-                c.setEnabled(false);
+            if (c instanceof JPanel) {
+                for (Component b : ((JPanel) c).getComponents()) {
+                    if (b instanceof JPanel) {
+                        for (Component bs : ((JPanel) b).getComponents()) {
+                            if (bs instanceof JButton) {
+                                bs.setEnabled(false);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
