@@ -57,7 +57,6 @@ public class ServerSideGame extends Thread{
 
             gameState = gamePackage.getGameState();
             if (gameState.equalsIgnoreCase("subject")){
-                System.out.println("inside subject");
                 changeCurrentPlayer();
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
