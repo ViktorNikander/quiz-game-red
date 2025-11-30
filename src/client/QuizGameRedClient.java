@@ -3,7 +3,6 @@ package client;
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -183,7 +182,6 @@ public class QuizGameRedClient extends JFrame{
                 gamePackage.setIndexRoundsPlayed(gamePackage.getIndexRoundsPlayed() + 1);
                 gamePackage.setFirstPlayerOnSubject(true);
                 gamePackage.setGameState("send update");
-                //TODO change something here to update GUI after finished round
             }
             showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
@@ -195,7 +193,6 @@ public class QuizGameRedClient extends JFrame{
     private void showMatchHistory() {
         base.removeAll();
         base.add(gamePackage.getMatchHistory());
-        //TODO update match history for non playing player after playing player finish round.
         revalidate();
         repaint();
     }

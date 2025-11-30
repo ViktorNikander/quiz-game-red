@@ -32,6 +32,10 @@ public class GamePackage implements Serializable {
         return matchHistory;
     }
 
+    public boolean isFirstPlayerOnSubject() {
+        return isFirstPlayerOnSubject;
+    }
+
     public void setMatchHistory(MatchHistory matchHistory) {
         this.matchHistory = matchHistory;
     }
