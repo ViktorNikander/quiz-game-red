@@ -1,9 +1,11 @@
-import MatchHistory.MatchHistory;
+package server;
+
+import match.history.MatchHistory;
+import questions.QuestionBank;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Properties;
 
 public class ServerSideGame extends Thread{

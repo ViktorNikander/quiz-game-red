@@ -1,4 +1,10 @@
-import MatchHistory.MatchHistory;
+package server;
+
+import match.history.MatchHistory;
+import questions.Question;
+import questions.QuestionBank;
+import questions.Subject;
+
 import java.io.Serializable;
 import java.util.Collections;
 

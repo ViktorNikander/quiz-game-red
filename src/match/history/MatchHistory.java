@@ -1,4 +1,4 @@
-package MatchHistory;
+package match.history;
 
 import javax.swing.*;
 import java.awt.*;

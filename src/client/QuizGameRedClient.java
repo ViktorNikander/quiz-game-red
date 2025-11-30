@@ -1,3 +1,9 @@
+package client;
+
+import questions.Question;
+import questions.Subject;
+import server.GamePackage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -50,7 +56,7 @@ public class QuizGameRedClient extends JFrame{
     private void chooseSubject() {
         base.removeAll();
         JPanel subjectMainPanel = new JPanel(new BorderLayout());
-        JLabel subjectLabel = new JLabel("Choose Subject");
+        JLabel subjectLabel = new JLabel("Choose questions.Subject");
         JPanel subjectPanel = new JPanel(new GridLayout(3, 1));
 
         subjectMainPanel.setPreferredSize(new Dimension(400, 500));

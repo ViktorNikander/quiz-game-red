@@ -1,4 +1,4 @@
-package MatchHistory;
+package match.history;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ public class RoundHistory extends JPanel {
     public RoundHistory(int nrOfQuestions){
         this.nrOfQuestions = nrOfQuestions;
         JPanel panel;
-        for (int i = 0; i < nrOfQuestions * 2 + 1; i++) { // * 2 makes enough labels for both players in round and + 1 makes label for Subject
+        for (int i = 0; i < nrOfQuestions * 2 + 1; i++) { // * 2 makes enough labels for both players in round and + 1 makes label for questions.Subject
             panel = new JPanel();
             if (i == nrOfQuestions){
                 panel.add(new JLabel(subject));
