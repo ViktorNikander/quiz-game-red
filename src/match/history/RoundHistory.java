@@ -8,7 +8,6 @@ import java.util.List;
 public class RoundHistory extends JPanel {
     private int nrOfQuestions;
     private String subject;
-    private List<Boolean> answerHistory = new ArrayList<>();
     private List<JPanel> panelList = new ArrayList<>();
 
     public RoundHistory(int nrOfQuestions){
@@ -26,27 +25,18 @@ public class RoundHistory extends JPanel {
         }
     }
 
-
     public void setSubject(String subject) {
         this.subject = subject;
         setSubjectGUI();
-    }
-
-    public String getSubject() {
-        return subject;
     }
 
     public void setSubjectGUI() {
         this.panelList.get(nrOfQuestions).add(new JLabel(subject));
     }
 
-    public List<Boolean> getAnswerHistory() {
-        return answerHistory;
-    }
-
     public void addAnswerHistory(boolean isCorrect, int indexOfQuestion, String currentPlayer){
         if (currentPlayer.equalsIgnoreCase("second")){
-            indexOfQuestion= indexOfQuestion + nrOfQuestions + 1;
+            indexOfQuestion= indexOfQuestion + nrOfQuestions + 1; //adjusts for second player
         }
         if (isCorrect){
             panelList.get(indexOfQuestion).setBackground(Color.GREEN);
