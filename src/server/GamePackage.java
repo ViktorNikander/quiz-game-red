@@ -53,22 +53,6 @@ public class GamePackage implements Serializable {
         }
     }
 
-    public ServerSidePlayer getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public void setFirstPlayer(ServerSidePlayer firstPlayer) {
-        this.firstPlayer = firstPlayer;
-    }
-
-    public ServerSidePlayer getSecondPlayer() {
-        return secondPlayer;
-    }
-
-    public void setSecondPlayer(ServerSidePlayer secondPlayer) {
-        this.secondPlayer = secondPlayer;
-    }
-
     public String getCurrentPlayer() {
         return currentPlayer;
     }
@@ -128,10 +112,6 @@ public class GamePackage implements Serializable {
 
     public QuestionBank getQuestionBank() {
         return questionBank;
-    }
-
-    public void setQuestionBank(QuestionBank questionBank) {
-        this.questionBank = questionBank;
     }
 
     public void setGameState(String choose) {
