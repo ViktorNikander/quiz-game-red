@@ -55,7 +55,7 @@ public class QuizGameRedClient extends JFrame{
     private void chooseSubject() {
         base.removeAll();
         JPanel subjectMainPanel = new JPanel(new BorderLayout());
-        JLabel subjectLabel = new JLabel("Choose questions.Subject");
+        JLabel subjectLabel = new JLabel("Choose Subject");
         JPanel subjectPanel = new JPanel(new GridLayout(3, 1));
 
         subjectMainPanel.setPreferredSize(new Dimension(400, 500));
