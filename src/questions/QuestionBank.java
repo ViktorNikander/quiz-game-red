@@ -13,7 +13,7 @@ public class QuestionBank implements Serializable {
         generalQuestions.add(new Question(
                 "What is the capital city of France?",
                 "Paris",
-                "London",
+                "Stockholm",
                 "Berlin",
                 "Madrid"
         ));
