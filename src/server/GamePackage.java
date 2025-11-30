@@ -77,10 +77,6 @@ public class GamePackage implements Serializable {
         this.indexRoundsPlayed = indexRoundsPlayed;
     }
 
-    public boolean isFirstPlayerOnSubject() {
-        return isFirstPlayerOnSubject;
-    }
-
     public void setFirstPlayerOnSubject(boolean firstPlayerOnSubject) {
         isFirstPlayerOnSubject = firstPlayerOnSubject;
     }
