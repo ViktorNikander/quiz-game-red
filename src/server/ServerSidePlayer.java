@@ -1,9 +1,11 @@
+package server;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ServerSidePlayer {
+public class ServerSidePlayer{
     private String player;
     private Socket socket;
     private ObjectOutputStream output;
@@ -23,6 +25,10 @@ public class ServerSidePlayer {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public String getPlayer() {
+        return player;
     }
 
     public int getScore() {

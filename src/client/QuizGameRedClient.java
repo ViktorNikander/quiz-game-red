@@ -1,5 +1,10 @@
-import QnAGUI.QnAGUI;
+import server.GamePackage;
 import javax.swing.*;
+package client;
+
+import questions.Question;
+import questions.Subject;
+import server.GamePackage;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,7 +19,6 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
-    QnAGUI  qnAGUI = new QnAGUI();
     private final Color[] buttonBackgrounds = {
             Color.WHITE,
             Color.BLUE,
@@ -39,7 +43,7 @@ public class QuizGameRedClient extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(500, 500);
+        setSize(500, 600);
         add(qnAGUI,BorderLayout.SOUTH);
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25));
         add(topPanel,BorderLayout.NORTH);
@@ -59,11 +63,14 @@ public class QuizGameRedClient extends JFrame{
                         chooseSubject();
                     } else if (gameState.equalsIgnoreCase("question")) {
                         answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
+                    } else if (gameState.equalsIgnoreCase("get update")) {
+                        showMatchHistory();
+                        gamePackage.setGameState("subject");
+                        send(gamePackage);
                     } else if (gameState.equalsIgnoreCase("quit")) {
-                        //TODO inform user the game is over or enable restart direct from client
                         showMatchHistory();
                         System.out.println("quit");
-                    }
+                        }
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -76,15 +83,32 @@ public class QuizGameRedClient extends JFrame{
 
     private void chooseSubject() {
         base.removeAll();
+        JPanel subjectMainPanel = new JPanel(new BorderLayout());
+        JLabel subjectLabel = new JLabel("Choose Subject");
+        JPanel subjectPanel = new JPanel(new GridLayout(3, 1));
+
+        subjectMainPanel.setPreferredSize(new Dimension(400, 500));
+        subjectLabel.setPreferredSize(new Dimension(400, 120));
+        subjectPanel.setPreferredSize(new Dimension(400, 480));
+
+        subjectLabel.setHorizontalAlignment(JLabel.CENTER);
+        subjectLabel.setVerticalAlignment(JLabel.CENTER);
+
+        subjectMainPanel.add(subjectLabel, BorderLayout.NORTH);
+        subjectMainPanel.add(subjectPanel, BorderLayout.CENTER);
+        base.add(subjectMainPanel, BorderLayout.CENTER);
+
         for (int i = 0; i < gamePackage.getNrOfSubjects(); i++) {
             Subject subject = gamePackage.getQuestionBank().getSubjectList().get(i);
             JButton button = new JButton(subject.getSubject());
+            button.setFocusPainted(false);
             button.addActionListener(e -> {
                 gamePackage.setChosenSubjectForRound(subject);
                 gamePackage.setGameState("question");
+                gamePackage.getMatchHistory().getRoundHistoryList().get(gamePackage.getIndexRoundsPlayed()).setSubject(subject.getSubject());
                 send(gamePackage);
             });
-            base.add(button);
+            subjectPanel.add(button);
         }
         revalidate();
         repaint();
@@ -92,14 +116,31 @@ public class QuizGameRedClient extends JFrame{
 
     private void answerQuestion(Question question) {
         base.removeAll();
-        base.add(new JLabel(question.getQuestion()));
+
+        JPanel qnaPanel = new JPanel(new BorderLayout());
+        JLabel questionLabel = new JLabel(question.getQuestion());
+        JPanel answerPanel = new JPanel(new GridLayout(2, 2));
+
+        qnaPanel.setPreferredSize(new Dimension(400, 500));
+        questionLabel.setPreferredSize(new Dimension(400, 200));
+        answerPanel.setPreferredSize(new Dimension(400, 300));
+
+        questionLabel.setHorizontalAlignment(JLabel.CENTER);
+        questionLabel.setVerticalAlignment(JLabel.CENTER);
+
+        qnaPanel.add(questionLabel,BorderLayout.NORTH);
+        base.add(qnaPanel,BorderLayout.CENTER);
+
         for (int i = 0; i < 4; i++) {
             String answer = question.getAllAnswers().get(i);
             if (answer.equalsIgnoreCase(question.getAnswer())){
                 JButton correctButton = new JButton(answer);
+                correctButton.setFocusPainted(false);
                 correctButton.addActionListener(e -> {
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(true, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -113,12 +154,15 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(correctButton);
+                answerPanel.add(correctButton);
             } else {
                 JButton button = new JButton(answer);
+                button.setFocusPainted(false);
                 button.addActionListener(e -> {
                     lockButtons();
                     button.setBackground(Color.RED);
+                    gamePackage.getMatchHistory().getRoundHistoryList()
+                            .get(gamePackage.getIndexRoundsPlayed()).addAnswerHistory(false, indexOfQuestion, gamePackage.getCurrentPlayer());
 
                     runAfterDelay(800, () -> {
                         indexOfQuestion++;
@@ -132,17 +176,27 @@ public class QuizGameRedClient extends JFrame{
                         }
                     });
                 });
-                base.add(button);
+                answerPanel.add(button);
             }
         }
+        qnaPanel.add(answerPanel,BorderLayout.CENTER);
+        base.add(qnaPanel,BorderLayout.CENTER);
         revalidate();
         repaint();
     }
 
     private void lockButtons(){
         for (Component c : base.getComponents()) {
-            if (c instanceof JButton) {
-                c.setEnabled(false);
+            if (c instanceof JPanel) {
+                for (Component b : ((JPanel) c).getComponents()) {
+                    if (b instanceof JPanel) {
+                        for (Component bs : ((JPanel) b).getComponents()) {
+                            if (bs instanceof JButton) {
+                                bs.setEnabled(false);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -156,9 +210,8 @@ public class QuizGameRedClient extends JFrame{
             } else {
                 gamePackage.setIndexRoundsPlayed(gamePackage.getIndexRoundsPlayed() + 1);
                 gamePackage.setFirstPlayerOnSubject(true);
-                gamePackage.setGameState("subject");
+                gamePackage.setGameState("send update");
             }
-            //TODO call a method that displays match history
             showMatchHistory();
             if (gamePackage.getIndexRoundsPlayed() >= gamePackage.getNrOfRounds()){
                 gamePackage.setGameState("quit");
@@ -168,7 +221,7 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
-        base.add(new JLabel("display match history"));
+        base.add(gamePackage.getMatchHistory());
         revalidate();
         repaint();
     }

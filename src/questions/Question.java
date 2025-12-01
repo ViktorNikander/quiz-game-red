@@ -1,3 +1,5 @@
+package questions;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,31 +24,11 @@ public class Question implements Serializable {
         return allAnswers;
     }
 
-    public void setAllAnswers(List<String> allAnswers) {
-        this.allAnswers = allAnswers;
-    }
-
     public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String getAnswer() {
         return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public List<String> getWrongAnswersList() {
-        return wrongAnswersList;
-    }
-
-    public void setWrongAnswersList(List<String> wrongAnswersList) {
-        this.wrongAnswersList = wrongAnswersList;
     }
 }

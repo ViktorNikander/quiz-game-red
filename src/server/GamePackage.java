@@ -1,7 +1,17 @@
+package server;
+
+import match.history.MatchHistory;
+import questions.Question;
+import questions.QuestionBank;
+import questions.Subject;
+
 import java.io.Serializable;
 import java.util.Collections;
 
 public class GamePackage implements Serializable {
+    private ServerSidePlayer firstPlayer;
+    private ServerSidePlayer secondPlayer;
+    private String currentPlayer;
     private QuestionBank questionBank = new QuestionBank();
     private Subject chosenSubjectForRound;
     private int nrOfQuestions;
@@ -11,9 +21,23 @@ public class GamePackage implements Serializable {
     private boolean isFirstPlayerOnSubject = true;
     private int indexRoundsPlayed = 0;
     private int lastAnswerCorrect = -1;
+    private MatchHistory matchHistory;
 
-    public GamePackage(QuestionBank questionBank) {
+    public GamePackage(QuestionBank questionBank, String currentPlayer) {
         this.questionBank = questionBank;
+        this.currentPlayer = currentPlayer;
+    }
+
+    public MatchHistory getMatchHistory() {
+        return matchHistory;
+    }
+
+    public boolean isFirstPlayerOnSubject() {
+        return isFirstPlayerOnSubject;
+    }
+
+    public void setMatchHistory(MatchHistory matchHistory) {
+        this.matchHistory = matchHistory;
     }
 
     public int getLastAnswerCorrect() {
@@ -33,6 +57,14 @@ public class GamePackage implements Serializable {
         }
     }
 
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
     public int getNrOfRounds() {
         return nrOfRounds;
     }
@@ -47,10 +79,6 @@ public class GamePackage implements Serializable {
 
     public void setIndexRoundsPlayed(int indexRoundsPlayed) {
         this.indexRoundsPlayed = indexRoundsPlayed;
-    }
-
-    public boolean isFirstPlayerOnSubject() {
-        return isFirstPlayerOnSubject;
     }
 
     public void setFirstPlayerOnSubject(boolean firstPlayerOnSubject) {
@@ -84,10 +112,6 @@ public class GamePackage implements Serializable {
 
     public QuestionBank getQuestionBank() {
         return questionBank;
-    }
-
-    public void setQuestionBank(QuestionBank questionBank) {
-        this.questionBank = questionBank;
     }
 
     public void setGameState(String choose) {
