@@ -4,6 +4,9 @@ import questions.Question;
 import questions.Subject;
 import server.GamePackage;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -89,13 +92,18 @@ public class QuizGameRedClient extends JFrame{
         base.removeAll();
 
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        JTextArea questionArea = new JTextArea(question.getQuestion());
+        JTextPane questionArea = new JTextPane();
         JPanel answerPanel = new JPanel(new GridLayout(2, 2));
 
         qnaPanel.setPreferredSize(new Dimension(400, 500));
         questionArea.setPreferredSize(new Dimension(400, 200));
         answerPanel.setPreferredSize(new Dimension(400, 300));
 
+        StyledDocument doc = questionArea.getStyledDocument();
+        SimpleAttributeSet set = new SimpleAttributeSet();
+        StyleConstants.setAlignment(set, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), set, false);
+        questionArea.setText(question.getQuestion());
         questionArea.setEditable(false);
         questionArea.setFocusable(false);
         questionArea.setOpaque(false);
