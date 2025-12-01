@@ -10,6 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import javax.swing.*;
+import javax.net.*;
+import java.awt.*;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+
 
 public class QuizGameRedClient extends JFrame{
     private JPanel base = new JPanel();
@@ -18,13 +24,19 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
+    private String playerName;
 
     public QuizGameRedClient(){
+        playerName = JOptionPane.showInputDialog("What is your name?");
+        if (playerName == null || playerName.trim().isEmpty()){
+            playerName = "Player";
+        }
         add(base);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 600);
+        startChat();
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -228,6 +240,17 @@ public class QuizGameRedClient extends JFrame{
         javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
         timer.setRepeats(false);
         timer.start();
+    }
+
+    private void startChat(){
+        try{
+            InetAddress ip = InetAddress.getByName("230.0.0.0");
+            MulticastSocket socket = new MulticastSocket(4444);
+            socket.joinGroup(ip);
+            new Chat(playerName, ip,4444, socket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
