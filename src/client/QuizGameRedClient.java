@@ -1,10 +1,10 @@
-import server.GamePackage;
-import javax.swing.*;
 package client;
 
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
+
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,8 +44,8 @@ public class QuizGameRedClient extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 600);
-        add(qnAGUI,BorderLayout.SOUTH);
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25));
+        //add(qnAGUI,BorderLayout.SOUTH);
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
         add(topPanel,BorderLayout.NORTH);
         colorChangeBtn = new JButton();
         colorChangeBtn.setPreferredSize(new Dimension(20,20));
@@ -110,6 +110,7 @@ public class QuizGameRedClient extends JFrame{
             });
             subjectPanel.add(button);
         }
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -181,6 +182,7 @@ public class QuizGameRedClient extends JFrame{
         }
         qnaPanel.add(answerPanel,BorderLayout.CENTER);
         base.add(qnaPanel,BorderLayout.CENTER);
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -222,6 +224,7 @@ public class QuizGameRedClient extends JFrame{
     private void showMatchHistory() {
         base.removeAll();
         base.add(gamePackage.getMatchHistory());
+        colorManager(base);
         revalidate();
         repaint();
     }
