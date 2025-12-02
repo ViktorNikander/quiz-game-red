@@ -117,6 +117,7 @@ public class QuizGameRedClient extends JFrame{
                 JButton correctButton = new JButton(answer);
                 correctButton.setFocusPainted(false);
                 correctButton.addActionListener(e -> {
+                    gamePackage.setLastAnswerCorrect(1);
                     lockButtons();
                     correctButton.setBackground(Color.GREEN);
                     gamePackage.getMatchHistory().getRoundHistoryList()
@@ -139,6 +140,7 @@ public class QuizGameRedClient extends JFrame{
                 JButton button = new JButton(answer);
                 button.setFocusPainted(false);
                 button.addActionListener(e -> {
+                    gamePackage.setLastAnswerCorrect(0);
                     lockButtons();
                     button.setBackground(Color.RED);
                     gamePackage.getMatchHistory().getRoundHistoryList()
@@ -201,7 +203,24 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
-        base.add(gamePackage.getMatchHistory());
+        base.setLayout(new BorderLayout());
+
+        base.add(gamePackage.getMatchHistory(), BorderLayout.CENTER);
+        String msg = gamePackage.getFinalResultMessage();
+
+        if (msg != null && !msg.isEmpty() && gamePackage.getGameState() != null && gamePackage.getGameState().equalsIgnoreCase("quit")) {
+            JPanel resultPanel = new JPanel(new BorderLayout());
+            JLabel titleLabel = new JLabel("Game result:");
+            titleLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            JTextArea resultArea = new JTextArea(msg);
+            resultArea.setEditable(false);
+            resultArea.setLineWrap(true);
+            resultArea.setWrapStyleWord(true);
+            resultPanel.add(titleLabel, BorderLayout.NORTH);
+            resultPanel.add(resultArea, BorderLayout.CENTER);
+            base.add(resultPanel, BorderLayout.SOUTH);
+        }
         revalidate();
         repaint();
     }

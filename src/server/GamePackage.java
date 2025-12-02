@@ -22,6 +22,7 @@ public class GamePackage implements Serializable {
     private int indexRoundsPlayed = 0;
     private int lastAnswerCorrect = -1;
     private MatchHistory matchHistory;
+    private String finalResultMessage;
 
     public GamePackage(QuestionBank questionBank, String currentPlayer) {
         this.questionBank = questionBank;
@@ -38,6 +39,12 @@ public class GamePackage implements Serializable {
 
     public void setMatchHistory(MatchHistory matchHistory) {
         this.matchHistory = matchHistory;
+    }
+    public String getFinalResultMessage() {
+        return finalResultMessage;
+    }
+    public void setFinalResultMessage(String finalResultMessage) {
+        this.finalResultMessage = finalResultMessage;
     }
 
     public int getLastAnswerCorrect() {

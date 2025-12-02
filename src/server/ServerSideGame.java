@@ -48,7 +48,7 @@ public class ServerSideGame extends Thread{
         currentPlayer.send(gamePackage);
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
             int result = gamePackage.getLastAnswerCorrect();
-            if (result == -1) {
+            if (result == 1) {
                 currentPlayer.addCorrectAnswer();
             }else if (result == 0) {
                 currentPlayer.addWrongAnswer();
@@ -73,14 +73,13 @@ public class ServerSideGame extends Thread{
                 gamePackage.setGameState("get update");
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("quit")) {
+                String resultMsg = "Game over!\n" + "Player 1 - Correct: " + firstPlayer.getCorrectAnswers()
+                        + ", Incorrect: " + firstPlayer.getWrongAnswers() + "\n" + "Player 2 - Correct: " + secondPlayer.getCorrectAnswers()
+                        + ", Incorrect: " + secondPlayer.getWrongAnswers();
+                gamePackage.setFinalResultMessage(resultMsg);
                 firstPlayer.send(gamePackage);
                 secondPlayer.send(gamePackage);
-
-                System.out.println("Game over!");
-                System.out.println("Player 1 - Correct: " + firstPlayer.getCorrectAnswers()
-                + ", Incorrect: " + firstPlayer.getWrongAnswers());
-                System.out.println("Second player - Correct: " + secondPlayer.getCorrectAnswers()
-                        + ", Incorrect: " + secondPlayer.getWrongAnswers());
+                System.out.println(resultMsg);
                 System.out.println("quit");
             }
         }
