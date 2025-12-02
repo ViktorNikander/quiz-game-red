@@ -92,23 +92,29 @@ public class QuizGameRedClient extends JFrame{
         base.removeAll();
 
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        JTextPane questionArea = new JTextPane();
+        JPanel qAlignmentPanel = new JPanel(new BorderLayout());
+        JPanel qAlignmentPushPanel = new JPanel();
+        JTextPane questionPane = new JTextPane();
         JPanel answerPanel = new JPanel(new GridLayout(2, 2));
 
         qnaPanel.setPreferredSize(new Dimension(400, 500));
-        questionArea.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPanel.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPushPanel.setPreferredSize(new Dimension(400, 80));
+        questionPane.setPreferredSize(new Dimension(400, 120));
         answerPanel.setPreferredSize(new Dimension(400, 300));
 
-        StyledDocument doc = questionArea.getStyledDocument();
+        StyledDocument doc = questionPane.getStyledDocument();
         SimpleAttributeSet set = new SimpleAttributeSet();
         StyleConstants.setAlignment(set, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), set, false);
-        questionArea.setText(question.getQuestion());
-        questionArea.setEditable(false);
-        questionArea.setFocusable(false);
-        questionArea.setOpaque(false);
+        questionPane.setText(question.getQuestion());
+        questionPane.setEditable(false);
+        questionPane.setFocusable(false);
+        questionPane.setOpaque(false);
 
-        qnaPanel.add(questionArea,BorderLayout.NORTH);
+        qAlignmentPanel.add(questionPane, BorderLayout.SOUTH);
+        qAlignmentPanel.add(qAlignmentPushPanel, BorderLayout.NORTH);
+        qnaPanel.add(qAlignmentPanel,BorderLayout.NORTH);
         base.add(qnaPanel,BorderLayout.CENTER);
 
         for (int i = 0; i < 4; i++) {
