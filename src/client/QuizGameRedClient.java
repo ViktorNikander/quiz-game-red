@@ -21,9 +21,13 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
+    private JLabel playerLabel = new JLabel("Connecting");
+    private boolean identitySet = false;
 
     public QuizGameRedClient(){
-        add(base);
+        setLayout(new BorderLayout());
+        add(playerLabel, BorderLayout.NORTH);
+        add(base, BorderLayout.CENTER);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -32,6 +36,15 @@ public class QuizGameRedClient extends JFrame{
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
                 while ((gamePackage = (GamePackage) input.readObject()) != null){
+                    if (!identitySet){
+                        String cp = gamePackage.getCurrentPlayer();
+                        if ("first".equalsIgnoreCase(cp)) {
+                            playerLabel.setText("Player 1");
+                        } else if ("second".equalsIgnoreCase(cp)) {
+                            playerLabel.setText("Player 2");
+                        }
+                        identitySet = true;
+                    }
                     gameState = gamePackage.getGameState();
                     if (gameState.equalsIgnoreCase("subject")){
                         chooseSubject();
