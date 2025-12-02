@@ -22,11 +22,16 @@ public class QuizGameRedClient extends JFrame{
     private String gameState;
     private int indexOfQuestion = 0;
     private JLabel playerLabel = new JLabel("Connecting");
+    private JLabel scoreLabel = new JLabel("Score: 0");
     private boolean identitySet = false;
+    private String player = null;
 
     public QuizGameRedClient(){
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(playerLabel, BorderLayout.WEST);
+        topPanel.add(scoreLabel, BorderLayout.EAST);
         setLayout(new BorderLayout());
-        add(playerLabel, BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
         add(base, BorderLayout.CENTER);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -37,13 +42,23 @@ public class QuizGameRedClient extends JFrame{
             input = new ObjectInputStream(s.getInputStream());
                 while ((gamePackage = (GamePackage) input.readObject()) != null){
                     if (!identitySet){
-                        String cp = gamePackage.getCurrentPlayer();
-                        if ("first".equalsIgnoreCase(cp)) {
+                        String current = gamePackage.getCurrentPlayer();
+                        player = current;
+                        if ("first".equalsIgnoreCase(current)) {
                             playerLabel.setText("Player 1");
-                        } else if ("second".equalsIgnoreCase(cp)) {
+                        } else if ("second".equalsIgnoreCase(current)) {
                             playerLabel.setText("Player 2");
                         }
                         identitySet = true;
+                    }
+                    if (player != null){
+                        int myScore = 0;
+                        if ("first".equalsIgnoreCase(player)){
+                            myScore = gamePackage.getFirstPlayerScore();
+                        } else if ("second".equalsIgnoreCase(player)){
+                            myScore = gamePackage.getSecondPlayerScore();
+                        }
+                        scoreLabel.setText("Score: " + myScore);
                     }
                     gameState = gamePackage.getGameState();
                     if (gameState.equalsIgnoreCase("subject")){

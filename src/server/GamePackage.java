@@ -130,4 +130,19 @@ public class GamePackage implements Serializable {
     public String getGameState() {
         return gameState;
     }
+    public int getFirstPlayerScore() {
+        return firstPlayerScore;
+    }
+
+    public void setFirstPlayerScore(int firstPlayerScore) {
+        this.firstPlayerScore = firstPlayerScore;
+    }
+
+    public int getSecondPlayerScore() {
+        return secondPlayerScore;
+    }
+
+    public void setSecondPlayerScore(int secondPlayerScore) {
+        this.secondPlayerScore = secondPlayerScore;
+    }
 }
