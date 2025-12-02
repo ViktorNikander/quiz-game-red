@@ -4,6 +4,9 @@ import questions.Question;
 import questions.Subject;
 import server.GamePackage;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -89,17 +92,29 @@ public class QuizGameRedClient extends JFrame{
         base.removeAll();
 
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        JLabel questionLabel = new JLabel(question.getQuestion());
+        JPanel qAlignmentPanel = new JPanel(new BorderLayout());
+        JPanel qAlignmentPushPanel = new JPanel();
+        JTextPane questionPane = new JTextPane();
         JPanel answerPanel = new JPanel(new GridLayout(2, 2));
 
         qnaPanel.setPreferredSize(new Dimension(400, 500));
-        questionLabel.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPanel.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPushPanel.setPreferredSize(new Dimension(400, 80));
+        questionPane.setPreferredSize(new Dimension(400, 120));
         answerPanel.setPreferredSize(new Dimension(400, 300));
 
-        questionLabel.setHorizontalAlignment(JLabel.CENTER);
-        questionLabel.setVerticalAlignment(JLabel.CENTER);
+        StyledDocument doc = questionPane.getStyledDocument();
+        SimpleAttributeSet set = new SimpleAttributeSet();
+        StyleConstants.setAlignment(set, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), set, false);
+        questionPane.setText(question.getQuestion());
+        questionPane.setEditable(false);
+        questionPane.setFocusable(false);
+        questionPane.setOpaque(false);
 
-        qnaPanel.add(questionLabel,BorderLayout.NORTH);
+        qAlignmentPanel.add(questionPane, BorderLayout.SOUTH);
+        qAlignmentPanel.add(qAlignmentPushPanel, BorderLayout.NORTH);
+        qnaPanel.add(qAlignmentPanel,BorderLayout.NORTH);
         base.add(qnaPanel,BorderLayout.CENTER);
 
         for (int i = 0; i < 4; i++) {
