@@ -45,11 +45,13 @@ public class ServerSideGame extends Thread{
         String gameState = "subject";
         gamePackage.setGameState(gameState);
         gamePackage.shuffleAll();
+        updateScore();
         currentPlayer.send(gamePackage);
         while ((gamePackage = (GamePackage) currentPlayer.receive()) != null){
             int result = gamePackage.getLastAnswerCorrect();
             if (result == 1) {
                 currentPlayer.addCorrectAnswer();
+                currentPlayer.addScorePoint();
             }else if (result == 0) {
                 currentPlayer.addWrongAnswer();
             }
@@ -61,12 +63,15 @@ public class ServerSideGame extends Thread{
                 changeCurrentPlayer();
                 gamePackage.shuffleAll();
                 gamePackage.setGameState("subject");
+                updateScore();
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("question")) {
+                updateScore();
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("switch")) {
                 changeCurrentPlayer();
                 gamePackage.setGameState("question");
+                updateScore();
                 currentPlayer.send(gamePackage);
             } else if (gameState.equalsIgnoreCase("send update")) {
                 changeCurrentPlayer();
@@ -77,12 +82,17 @@ public class ServerSideGame extends Thread{
                         + ", Incorrect: " + firstPlayer.getWrongAnswers() + "\n" + "Player 2 - Correct: " + secondPlayer.getCorrectAnswers()
                         + ", Incorrect: " + secondPlayer.getWrongAnswers();
                 gamePackage.setFinalResultMessage(resultMsg);
+                updateScore();
                 firstPlayer.send(gamePackage);
                 secondPlayer.send(gamePackage);
                 System.out.println(resultMsg);
                 System.out.println("quit");
             }
         }
+    }
+    private void updateScore() {
+        gamePackage.setFirstPlayerScore(firstPlayer.getScore());
+        gamePackage.setSecondPlayerScore(secondPlayer.getScore());
     }
 
     private void changeCurrentPlayer() {

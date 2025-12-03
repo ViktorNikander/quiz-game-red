@@ -23,6 +23,8 @@ public class GamePackage implements Serializable {
     private int lastAnswerCorrect = -1;
     private MatchHistory matchHistory;
     private String finalResultMessage;
+    private int firstPlayerScore;
+    private int secondPlayerScore;
 
     public GamePackage(QuestionBank questionBank, String currentPlayer) {
         this.questionBank = questionBank;
@@ -127,5 +129,20 @@ public class GamePackage implements Serializable {
 
     public String getGameState() {
         return gameState;
+    }
+    public int getFirstPlayerScore() {
+        return firstPlayerScore;
+    }
+
+    public void setFirstPlayerScore(int firstPlayerScore) {
+        this.firstPlayerScore = firstPlayerScore;
+    }
+
+    public int getSecondPlayerScore() {
+        return secondPlayerScore;
+    }
+
+    public void setSecondPlayerScore(int secondPlayerScore) {
+        this.secondPlayerScore = secondPlayerScore;
     }
 }

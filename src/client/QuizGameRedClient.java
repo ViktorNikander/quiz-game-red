@@ -4,7 +4,11 @@ package client;
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
+
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,6 +29,28 @@ public class QuizGameRedClient extends JFrame{
     private GamePackage gamePackage;
     private String gameState;
     private int indexOfQuestion = 0;
+    private JLabel playerLabel = new JLabel("Connecting");
+    private JLabel scoreLabel = new JLabel("Score: 0");
+    private boolean identitySet = false;
+    private String player = null;
+    private final Color[] buttonBackgrounds = {
+            Color.WHITE,
+            Color.BLUE,
+            Color.BLACK,
+            Color.ORANGE,
+            Color.LIGHT_GRAY,
+            Color.MAGENTA
+    };
+    private final Color[] buttonForegrounds = {
+            Color.BLACK,
+            Color.WHITE,
+            Color.WHITE,
+            Color.BLACK,
+            Color.BLACK,
+            Color.BLACK
+    };
+    private int colorIndex = 0;
+    private JButton colorChangeBtn;
     private String playerName;
 
     public QuizGameRedClient(){
@@ -32,30 +58,63 @@ public class QuizGameRedClient extends JFrame{
         if (playerName == null || playerName.trim().isEmpty()){
             playerName = "Player";
         }
-        add(base);
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(playerLabel, BorderLayout.WEST);
+        topPanel.add(scoreLabel, BorderLayout.EAST);
+        setLayout(new BorderLayout());
+        add(topPanel, BorderLayout.NORTH);
+        add(base, BorderLayout.CENTER);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 600);
         startChat();
+        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
+        add(topCPanel,BorderLayout.NORTH);
+        colorChangeBtn = new JButton();
+        colorChangeBtn.setPreferredSize(new Dimension(20,20));
+        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
+        colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        colorChangeBtn.setFocusPainted(false);
+        colorChangeBtn.addActionListener(e -> colorChanger());
+        topCPanel.add(colorChangeBtn);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
-            while ((gamePackage = (GamePackage) input.readObject()) != null){
-                gameState = gamePackage.getGameState();
-                if (gameState.equalsIgnoreCase("subject")){
-                    chooseSubject();
-                } else if (gameState.equalsIgnoreCase("question")) {
-                    answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
-                } else if (gameState.equalsIgnoreCase("get update")) {
-                    showMatchHistory();
-                    gamePackage.setGameState("subject");
-                    send(gamePackage);
-                } else if (gameState.equalsIgnoreCase("quit")) {
-                    showMatchHistory();
-                    System.out.println("quit");
+                while ((gamePackage = (GamePackage) input.readObject()) != null){
+                    if (!identitySet){
+                        String current = gamePackage.getCurrentPlayer();
+                        player = current;
+                        if ("first".equalsIgnoreCase(current)) {
+                            playerLabel.setText("Player 1");
+                        } else if ("second".equalsIgnoreCase(current)) {
+                            playerLabel.setText("Player 2");
+                        }
+                        identitySet = true;
+                    }
+                    if (player != null){
+                        int myScore = 0;
+                        if ("first".equalsIgnoreCase(player)){
+                            myScore = gamePackage.getFirstPlayerScore();
+                        } else if ("second".equalsIgnoreCase(player)){
+                            myScore = gamePackage.getSecondPlayerScore();
+                        }
+                        scoreLabel.setText("Score: " + myScore);
+                    }
+                    gameState = gamePackage.getGameState();
+                    if (gameState.equalsIgnoreCase("subject")){
+                        chooseSubject();
+                    } else if (gameState.equalsIgnoreCase("question")) {
+                        answerQuestion(gamePackage.getChosenSubjectForRound().getQuestionList().get(indexOfQuestion));
+                    } else if (gameState.equalsIgnoreCase("get update")) {
+                        showMatchHistory();
+                        gamePackage.setGameState("subject");
+                        send(gamePackage);
+                    } else if (gameState.equalsIgnoreCase("quit")) {
+                        showMatchHistory();
+                        System.out.println("quit");
+                        }
                 }
-            }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -94,6 +153,7 @@ public class QuizGameRedClient extends JFrame{
             });
             subjectPanel.add(button);
         }
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -102,17 +162,29 @@ public class QuizGameRedClient extends JFrame{
         base.removeAll();
 
         JPanel qnaPanel = new JPanel(new BorderLayout());
-        JLabel questionLabel = new JLabel(question.getQuestion());
+        JPanel qAlignmentPanel = new JPanel(new BorderLayout());
+        JPanel qAlignmentPushPanel = new JPanel();
+        JTextPane questionPane = new JTextPane();
         JPanel answerPanel = new JPanel(new GridLayout(2, 2));
 
         qnaPanel.setPreferredSize(new Dimension(400, 500));
-        questionLabel.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPanel.setPreferredSize(new Dimension(400, 200));
+        qAlignmentPushPanel.setPreferredSize(new Dimension(400, 80));
+        questionPane.setPreferredSize(new Dimension(400, 120));
         answerPanel.setPreferredSize(new Dimension(400, 300));
 
-        questionLabel.setHorizontalAlignment(JLabel.CENTER);
-        questionLabel.setVerticalAlignment(JLabel.CENTER);
+        StyledDocument doc = questionPane.getStyledDocument();
+        SimpleAttributeSet set = new SimpleAttributeSet();
+        StyleConstants.setAlignment(set, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), set, false);
+        questionPane.setText(question.getQuestion());
+        questionPane.setEditable(false);
+        questionPane.setFocusable(false);
+        questionPane.setOpaque(false);
 
-        qnaPanel.add(questionLabel,BorderLayout.NORTH);
+        qAlignmentPanel.add(questionPane, BorderLayout.SOUTH);
+        qAlignmentPanel.add(qAlignmentPushPanel, BorderLayout.NORTH);
+        qnaPanel.add(qAlignmentPanel,BorderLayout.NORTH);
         base.add(qnaPanel,BorderLayout.CENTER);
 
         for (int i = 0; i < 4; i++) {
@@ -167,6 +239,7 @@ public class QuizGameRedClient extends JFrame{
         }
         qnaPanel.add(answerPanel,BorderLayout.CENTER);
         base.add(qnaPanel,BorderLayout.CENTER);
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -243,6 +316,28 @@ public class QuizGameRedClient extends JFrame{
         timer.start();
     }
 
+    private void colorManager(Container container){
+        for (Component c : container.getComponents()) {
+            if (c instanceof JButton) {
+                c.setBackground(buttonBackgrounds[colorIndex]);
+                c.setForeground(buttonForegrounds[colorIndex]);
+            } else if (c instanceof Container) {
+                colorManager((Container) c);
+            }
+        }
+    }
+
+    private void colorChanger(){
+        colorIndex = (colorIndex + 1) % buttonBackgrounds.length;
+
+        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
+        colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
+
+        colorManager(this.getContentPane());
+
+        repaint();
+    }
+
     private void startChat(){
         try{
             InetAddress ip = InetAddress.getByName("230.0.0.0");
@@ -253,7 +348,6 @@ public class QuizGameRedClient extends JFrame{
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         QuizGameRedClient c = new QuizGameRedClient();
     }
