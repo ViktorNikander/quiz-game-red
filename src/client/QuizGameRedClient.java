@@ -3,6 +3,7 @@ package client;
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
+
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -25,6 +26,24 @@ public class QuizGameRedClient extends JFrame{
     private JLabel scoreLabel = new JLabel("Score: 0");
     private boolean identitySet = false;
     private String player = null;
+    private final Color[] buttonBackgrounds = {
+            Color.WHITE,
+            Color.BLUE,
+            Color.BLACK,
+            Color.ORANGE,
+            Color.LIGHT_GRAY,
+            Color.MAGENTA
+    };
+    private final Color[] buttonForegrounds = {
+            Color.BLACK,
+            Color.WHITE,
+            Color.WHITE,
+            Color.BLACK,
+            Color.BLACK,
+            Color.BLACK
+    };
+    private int colorIndex = 0;
+    private JButton colorChangeBtn;
 
     public QuizGameRedClient(){
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -37,6 +56,16 @@ public class QuizGameRedClient extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 600);
+        //add(qnAGUI,BorderLayout.SOUTH);
+        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
+        add(topPanel,BorderLayout.NORTH);
+        colorChangeBtn = new JButton();
+        colorChangeBtn.setPreferredSize(new Dimension(20,20));
+        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
+        colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        colorChangeBtn.setFocusPainted(false);
+        colorChangeBtn.addActionListener(e -> colorChanger());
+        topCPanel.add(colorChangeBtn);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -112,6 +141,7 @@ public class QuizGameRedClient extends JFrame{
             });
             subjectPanel.add(button);
         }
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -197,6 +227,7 @@ public class QuizGameRedClient extends JFrame{
         }
         qnaPanel.add(answerPanel,BorderLayout.CENTER);
         base.add(qnaPanel,BorderLayout.CENTER);
+        colorManager(base);
         revalidate();
         repaint();
     }
@@ -271,6 +302,28 @@ public class QuizGameRedClient extends JFrame{
         javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
         timer.setRepeats(false);
         timer.start();
+    }
+
+    private void colorManager(Container container){
+        for (Component c : container.getComponents()) {
+            if (c instanceof JButton) {
+                c.setBackground(buttonBackgrounds[colorIndex]);
+                c.setForeground(buttonForegrounds[colorIndex]);
+            } else if (c instanceof Container) {
+                colorManager((Container) c);
+            }
+        }
+    }
+
+    private void colorChanger(){
+        colorIndex = (colorIndex + 1) % buttonBackgrounds.length;
+
+        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
+        colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
+
+        colorManager(this.getContentPane());
+
+        repaint();
     }
 
     public static void main(String[] args) {
