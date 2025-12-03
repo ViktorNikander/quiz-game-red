@@ -1,6 +1,6 @@
 package client;
 
-import Userprofile.Chat;
+
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
