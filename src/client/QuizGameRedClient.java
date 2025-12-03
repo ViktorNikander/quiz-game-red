@@ -58,7 +58,7 @@ public class QuizGameRedClient extends JFrame{
         setSize(500, 600);
         //add(qnAGUI,BorderLayout.SOUTH);
         JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
-        add(topPanel,BorderLayout.NORTH);
+        add(topCPanel,BorderLayout.NORTH);
         colorChangeBtn = new JButton();
         colorChangeBtn.setPreferredSize(new Dimension(20,20));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
