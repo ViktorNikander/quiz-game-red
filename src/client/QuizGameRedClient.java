@@ -92,18 +92,30 @@ public class QuizGameRedClient extends JFrame{
         JPanel topSidePanel = new JPanel(new BorderLayout());
 
         JPanel colorPanel = new JPanel();
-        colorPanel.setPreferredSize(new Dimension(400, 120));
+        colorPanel.setPreferredSize(new Dimension(200, 120));
         colorChangeBtn = new JButton("Change Color");
-        colorChangeBtn.setPreferredSize(new Dimension(200,100));
+        colorChangeBtn.setPreferredSize(new Dimension(180,100));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
         colorPanel.add(colorChangeBtn);
 
+        JPanel avatarPanel = new JPanel(new BorderLayout());
+        avatarPanel.setPreferredSize(new Dimension(200, 120));
+        avatarLabel = new JLabel();
+        avatarLabel.setPreferredSize(new Dimension(50, 50));
+        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
+        avatarBtn = new JButton("Avatar");
+        avatarBtn.setPreferredSize(new Dimension(100,100));
+        avatarBtn.setFocusPainted(false);
+        avatarBtn.addActionListener(e -> changeAvatar());
 
+        avatarPanel.add(avatarBtn, BorderLayout.WEST);
+        avatarPanel.add(avatarLabel, BorderLayout.CENTER);
 
         topSidePanel.add(colorPanel, BorderLayout.WEST);
+        topSidePanel.add(avatarPanel, BorderLayout.EAST);
 
         sidePanel.add(topSidePanel,BorderLayout.NORTH);
         startChat();
