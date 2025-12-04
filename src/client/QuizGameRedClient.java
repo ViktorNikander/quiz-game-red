@@ -113,7 +113,9 @@ public class QuizGameRedClient extends JFrame{
 
         sidePanel.add(colorPanel,BorderLayout.NORTH);
         startChat();
-        //
+        /*
+
+         */
         add(mainPanel,BorderLayout.CENTER);
         add(sidePanel, BorderLayout.EAST);
 
