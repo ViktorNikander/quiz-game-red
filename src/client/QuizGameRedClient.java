@@ -22,6 +22,7 @@ import java.net.MulticastSocket;
 
 public class QuizGameRedClient extends JFrame{
     private JPanel base = new JPanel();
+    private JPanel sidePanel = new JPanel();
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private GamePackage gamePackage;
@@ -57,7 +58,7 @@ public class QuizGameRedClient extends JFrame{
             playerName = "Player";
         }
 
-        setSize(540, 620);
+        setSize(940, 620);
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -76,24 +77,23 @@ public class QuizGameRedClient extends JFrame{
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(base, BorderLayout.CENTER);
 
-        JPanel sidePanel = new JPanel(new BorderLayout());
-        sidePanel.setPreferredSize(new Dimension(40, 620));
+        sidePanel.setPreferredSize(new Dimension(400, 620));
 
-        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        colorChangeBtn = new JButton();
-        colorChangeBtn.setPreferredSize(new Dimension(20,20));
+        JPanel colorPanel = new JPanel();
+        colorPanel.setPreferredSize(new Dimension(400, 120));
+        colorChangeBtn = new JButton("Change Color");
+        colorChangeBtn.setPreferredSize(new Dimension(200,100));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
-        topCPanel.add(colorChangeBtn);
+        colorPanel.add(colorChangeBtn);
 
-        sidePanel.add(topCPanel,BorderLayout.NORTH);
+        sidePanel.add(colorPanel,BorderLayout.NORTH);
+        startChat();
 
         add(mainPanel,BorderLayout.CENTER);
         add(sidePanel, BorderLayout.EAST);
-
-        startChat();
 
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
@@ -143,6 +143,7 @@ public class QuizGameRedClient extends JFrame{
 
     private void chooseSubject() {
         base.removeAll();
+
         JPanel subjectMainPanel = new JPanel(new BorderLayout());
         JLabel subjectLabel = new JLabel("Choose Subject");
         JPanel subjectPanel = new JPanel(new GridLayout(3, 1));
@@ -297,7 +298,9 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
+        //This line messes up GUI
         base.setLayout(new BorderLayout());
+        //^dont like this one
 
         base.add(gamePackage.getMatchHistory(), BorderLayout.CENTER);
         String msg = gamePackage.getFinalResultMessage();
@@ -308,7 +311,10 @@ public class QuizGameRedClient extends JFrame{
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
             JTextArea resultArea = new JTextArea(msg);
+            resultArea.setAlignmentY(Component.CENTER_ALIGNMENT);
             resultArea.setEditable(false);
+            resultArea.setFocusable(false);
+            resultArea.setOpaque(false);
             resultArea.setLineWrap(true);
             resultArea.setWrapStyleWord(true);
             resultPanel.add(titleLabel, BorderLayout.NORTH);
@@ -360,7 +366,11 @@ public class QuizGameRedClient extends JFrame{
             InetAddress ip = InetAddress.getByName("230.0.0.0");
             MulticastSocket socket = new MulticastSocket(4444);
             socket.joinGroup(ip);
-            new Chat(playerName, ip,4444, socket);
+            Chat chatPanel = new Chat(playerName, ip,4444, socket);
+            chatPanel.setPreferredSize(new Dimension(380, 400));
+            sidePanel.add(chatPanel, BorderLayout.CENTER);
+            sidePanel.revalidate();
+            sidePanel.repaint();
         } catch (Exception e) {
             e.printStackTrace();
         }
