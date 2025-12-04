@@ -89,6 +89,7 @@ public class QuizGameRedClient extends JFrame{
         mainPanel.add(base, BorderLayout.CENTER);
 
         sidePanel.setPreferredSize(new Dimension(400, 620));
+        JPanel topSidePanel = new JPanel(new BorderLayout());
 
         JPanel colorPanel = new JPanel();
         colorPanel.setPreferredSize(new Dimension(400, 120));
@@ -100,7 +101,11 @@ public class QuizGameRedClient extends JFrame{
         colorChangeBtn.addActionListener(e -> colorChanger());
         colorPanel.add(colorChangeBtn);
 
-        sidePanel.add(colorPanel,BorderLayout.NORTH);
+
+
+        topSidePanel.add(colorPanel, BorderLayout.WEST);
+
+        sidePanel.add(topSidePanel,BorderLayout.NORTH);
         startChat();
 
         add(mainPanel,BorderLayout.CENTER);
@@ -185,6 +190,14 @@ public class QuizGameRedClient extends JFrame{
         colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
 
         colorManager(this.getContentPane());
+
+        repaint();
+    }
+
+    private void changeAvatar() {
+        avatarIndex = (avatarIndex + 1) % avatars.length;
+
+        avatarLabel.setIcon(avatars[avatarIndex]);
 
         repaint();
     }
