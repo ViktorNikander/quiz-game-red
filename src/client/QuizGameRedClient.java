@@ -1,6 +1,5 @@
 package client;
 
-
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
@@ -20,7 +19,6 @@ import javax.net.*;
 import java.awt.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-
 
 public class QuizGameRedClient extends JFrame{
     private JPanel base = new JPanel();
@@ -58,19 +56,30 @@ public class QuizGameRedClient extends JFrame{
         if (playerName == null || playerName.trim().isEmpty()){
             playerName = "Player";
         }
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(playerLabel, BorderLayout.WEST);
-        topPanel.add(scoreLabel, BorderLayout.EAST);
-        setLayout(new BorderLayout());
-        add(topPanel, BorderLayout.NORTH);
-        add(base, BorderLayout.CENTER);
+
+        setSize(540, 620);
+        setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(500, 600);
-        startChat();
-        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
-        add(topCPanel,BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setPreferredSize(new Dimension(500, 620));
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setPreferredSize(new Dimension(500, 20));
+        topPanel.add(playerLabel, BorderLayout.WEST);
+        topPanel.add(scoreLabel, BorderLayout.EAST);
+
+        base.setPreferredSize(new Dimension(500, 600));
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(base, BorderLayout.CENTER);
+
+        JPanel sidePanel = new JPanel(new BorderLayout());
+        sidePanel.setPreferredSize(new Dimension(40, 620));
+
+        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         colorChangeBtn = new JButton();
         colorChangeBtn.setPreferredSize(new Dimension(20,20));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
@@ -78,6 +87,14 @@ public class QuizGameRedClient extends JFrame{
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
         topCPanel.add(colorChangeBtn);
+
+        sidePanel.add(topCPanel,BorderLayout.NORTH);
+
+        add(mainPanel,BorderLayout.CENTER);
+        add(sidePanel, BorderLayout.EAST);
+
+        startChat();
+
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -113,7 +130,7 @@ public class QuizGameRedClient extends JFrame{
                     } else if (gameState.equalsIgnoreCase("quit")) {
                         showMatchHistory();
                         System.out.println("quit");
-                        }
+                    }
                 }
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
@@ -185,6 +202,7 @@ public class QuizGameRedClient extends JFrame{
         qAlignmentPanel.add(questionPane, BorderLayout.SOUTH);
         qAlignmentPanel.add(qAlignmentPushPanel, BorderLayout.NORTH);
         qnaPanel.add(qAlignmentPanel,BorderLayout.NORTH);
+        qnaPanel.add(answerPanel,BorderLayout.CENTER);
         base.add(qnaPanel,BorderLayout.CENTER);
 
         for (int i = 0; i < 4; i++) {
@@ -237,8 +255,7 @@ public class QuizGameRedClient extends JFrame{
                 answerPanel.add(button);
             }
         }
-        qnaPanel.add(answerPanel,BorderLayout.CENTER);
-        base.add(qnaPanel,BorderLayout.CENTER);
+
         colorManager(base);
         revalidate();
         repaint();
