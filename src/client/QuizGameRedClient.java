@@ -14,9 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.swing.*;
-import javax.net.*;
-import java.awt.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
@@ -69,7 +66,7 @@ public class QuizGameRedClient extends JFrame{
             playerName = "Player";
         }
 
-        setSize(940, 620);
+        setSize(970, 620);
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -90,32 +87,38 @@ public class QuizGameRedClient extends JFrame{
 
         sidePanel.setPreferredSize(new Dimension(400, 620));
         JPanel topSidePanel = new JPanel(new BorderLayout());
+        topSidePanel.setPreferredSize(new Dimension(400, 120));
 
-        JPanel colorPanel = new JPanel();
-        colorPanel.setPreferredSize(new Dimension(200, 120));
+        JPanel optionsPanel = new JPanel(new GridLayout(1, 3));
+        optionsPanel.setPreferredSize(new Dimension(230, 120));
+
         colorChangeBtn = new JButton("Change Color");
-        colorChangeBtn.setPreferredSize(new Dimension(180,100));
+        colorChangeBtn.setPreferredSize(new Dimension(130,100));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
-        colorPanel.add(colorChangeBtn);
 
-        JPanel avatarPanel = new JPanel(new BorderLayout());
-        avatarPanel.setPreferredSize(new Dimension(200, 120));
-        avatarLabel = new JLabel();
-        avatarLabel.setPreferredSize(new Dimension(50, 50));
-        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
         avatarBtn = new JButton("Avatar");
-        avatarBtn.setPreferredSize(new Dimension(100,100));
+        avatarBtn.setPreferredSize(new Dimension(130, 100));
+        avatarBtn.setBackground(buttonBackgrounds[colorIndex]);
+        avatarBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         avatarBtn.setFocusPainted(false);
         avatarBtn.addActionListener(e -> changeAvatar());
 
-        avatarPanel.add(avatarBtn, BorderLayout.WEST);
-        avatarPanel.add(avatarLabel, BorderLayout.CENTER);
+        JPanel avatarLabelPanel = new JPanel();
+        avatarLabelPanel.setPreferredSize(new Dimension(200, 120));
+        avatarLabel = new JLabel();
+        avatarLabel.setPreferredSize(new Dimension(200, 120));
+        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
+        avatarLabelPanel.add(avatarLabel);
 
-        topSidePanel.add(colorPanel, BorderLayout.WEST);
-        topSidePanel.add(avatarPanel, BorderLayout.EAST);
+
+        optionsPanel.add(colorChangeBtn);
+        optionsPanel.add(avatarBtn);
+        optionsPanel.add(avatarLabel);
+
+        topSidePanel.add(optionsPanel);
 
         sidePanel.add(topSidePanel,BorderLayout.NORTH);
         startChat();
