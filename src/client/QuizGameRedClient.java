@@ -87,38 +87,38 @@ public class QuizGameRedClient extends JFrame{
 
         sidePanel.setPreferredSize(new Dimension(400, 620));
         JPanel topSidePanel = new JPanel(new BorderLayout());
-        topSidePanel.setPreferredSize(new Dimension(400, 120));
+        topSidePanel.setPreferredSize(new Dimension(381, 120));
 
-        JPanel optionsPanel = new JPanel(new GridLayout(1, 3));
-        optionsPanel.setPreferredSize(new Dimension(230, 120));
-
+        JPanel colorChangeBtnPanel = new JPanel();
+        colorChangeBtnPanel.setPreferredSize(new Dimension(127, 120));
         colorChangeBtn = new JButton("Change Color");
-        colorChangeBtn.setPreferredSize(new Dimension(130,100));
+        colorChangeBtn.setPreferredSize(new Dimension(120,100));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
+        colorChangeBtnPanel.add(colorChangeBtn);
 
-        avatarBtn = new JButton("Avatar");
-        avatarBtn.setPreferredSize(new Dimension(130, 100));
+        JPanel avatarBtnPanel = new JPanel();
+        avatarBtnPanel.setPreferredSize(new Dimension(127, 120));
+        avatarBtn = new JButton("Change Avatar");
+        avatarBtn.setPreferredSize(new Dimension(127, 100));
         avatarBtn.setBackground(buttonBackgrounds[colorIndex]);
         avatarBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         avatarBtn.setFocusPainted(false);
         avatarBtn.addActionListener(e -> changeAvatar());
+        avatarBtnPanel.add(avatarBtn);
 
         JPanel avatarLabelPanel = new JPanel();
-        avatarLabelPanel.setPreferredSize(new Dimension(200, 120));
+        avatarLabelPanel.setPreferredSize(new Dimension(127, 120));
         avatarLabel = new JLabel();
-        avatarLabel.setPreferredSize(new Dimension(200, 120));
+        avatarLabel.setPreferredSize(new Dimension(127, 100));
         avatarLabel.setHorizontalAlignment(JLabel.CENTER);
         avatarLabelPanel.add(avatarLabel);
 
-
-        optionsPanel.add(colorChangeBtn);
-        optionsPanel.add(avatarBtn);
-        optionsPanel.add(avatarLabel);
-
-        topSidePanel.add(optionsPanel);
+        topSidePanel.add(colorChangeBtnPanel, BorderLayout.WEST);
+        topSidePanel.add(avatarBtnPanel, BorderLayout.CENTER);
+        topSidePanel.add(avatarLabelPanel, BorderLayout.EAST);
 
         sidePanel.add(topSidePanel,BorderLayout.NORTH);
         startChat();
@@ -178,7 +178,7 @@ public class QuizGameRedClient extends JFrame{
             MulticastSocket socket = new MulticastSocket(4444);
             socket.joinGroup(ip);
             Chat chatPanel = new Chat(playerName, ip,4444, socket);
-            chatPanel.setPreferredSize(new Dimension(380, 400));
+            chatPanel.setPreferredSize(new Dimension(381, 400));
             sidePanel.add(chatPanel, BorderLayout.CENTER);
             sidePanel.revalidate();
             sidePanel.repaint();
