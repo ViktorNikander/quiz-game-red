@@ -1,5 +1,6 @@
 package client;
 
+
 import questions.Question;
 import questions.Subject;
 import server.GamePackage;
@@ -14,9 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.swing.*;
-import javax.net.*;
-import java.awt.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
@@ -32,6 +30,17 @@ public class QuizGameRedClient extends JFrame{
     private JLabel scoreLabel = new JLabel("Score: 0");
     private boolean identitySet = false;
     private String player = null;
+    private final ImageIcon[] avatars = {
+            null,
+            new ImageIcon("avatar1.png"),
+            new ImageIcon("avatar2.png"),
+            new ImageIcon("avatar3.png"),
+            new ImageIcon("avatar4.png"),
+            new ImageIcon("avatar5.png")
+    };
+    private int avatarIndex = 0;
+    private JButton avatarBtn;
+    private JLabel avatarLabel;
     private final Color[] buttonBackgrounds = {
             Color.WHITE,
             Color.BLUE,
@@ -83,6 +92,17 @@ public class QuizGameRedClient extends JFrame{
         colorPanel.setPreferredSize(new Dimension(400, 120));
         colorChangeBtn = new JButton("Change Color");
         colorChangeBtn.setPreferredSize(new Dimension(200,100));
+        setSize(500, 600);
+        JPanel topCPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 25)); //Ändra plats på knappen
+        add(topCPanel,BorderLayout.NORTH);
+        avatarLabel = new JLabel();
+        avatarLabel.setPreferredSize(new Dimension(50, 50));
+        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
+        avatarBtn = new JButton("Avatar");
+        avatarBtn.setFocusPainted(false);
+        avatarBtn.addActionListener(e -> changeAvatar());
+        colorChangeBtn = new JButton();
+        colorChangeBtn.setPreferredSize(new Dimension(20,20));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
@@ -95,6 +115,9 @@ public class QuizGameRedClient extends JFrame{
         add(mainPanel,BorderLayout.CENTER);
         add(sidePanel, BorderLayout.EAST);
 
+        topCPanel.add(colorChangeBtn);
+        topCPanel.add(avatarBtn);
+        topCPanel.add(avatarLabel);
         try (Socket s = new Socket("127.0.0.1", 55555)){
             output = new ObjectOutputStream(s.getOutputStream());
             input = new ObjectInputStream(s.getInputStream());
@@ -174,6 +197,14 @@ public class QuizGameRedClient extends JFrame{
         colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
 
         colorManager(this.getContentPane());
+
+        repaint();
+    }
+
+    private void changeAvatar() {
+        avatarIndex = (avatarIndex + 1) % avatars.length;
+
+        avatarLabel.setIcon(avatars[avatarIndex]);
 
         repaint();
     }
