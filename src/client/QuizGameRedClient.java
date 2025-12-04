@@ -47,7 +47,8 @@ public class QuizGameRedClient extends JFrame{
             Color.BLACK,
             Color.ORANGE,
             Color.LIGHT_GRAY,
-            Color.MAGENTA
+            Color.MAGENTA,
+            Color.YELLOW
     };
     private final Color[] buttonForegrounds = {
             Color.BLACK,
@@ -55,7 +56,8 @@ public class QuizGameRedClient extends JFrame{
             Color.WHITE,
             Color.BLACK,
             Color.BLACK,
-            Color.BLACK
+            Color.BLACK,
+            Color.WHITE
     };
     private int colorIndex = 0;
     private JButton colorChangeBtn;
