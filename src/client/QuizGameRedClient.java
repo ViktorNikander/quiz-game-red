@@ -298,11 +298,11 @@ public class QuizGameRedClient extends JFrame{
 
     private void showMatchHistory() {
         base.removeAll();
-        //This line messes up GUI
-        base.setLayout(new BorderLayout());
-        //^dont like this one
 
-        base.add(gamePackage.getMatchHistory(), BorderLayout.CENTER);
+        JPanel matchHistoryPanel = new JPanel(new BorderLayout());
+        matchHistoryPanel.add(gamePackage.getMatchHistory(), BorderLayout.CENTER);
+        gamePackage.getMatchHistory().setPreferredSize(new Dimension(400,450));
+        base.add(matchHistoryPanel,BorderLayout.CENTER);
         String msg = gamePackage.getFinalResultMessage();
 
         if (msg != null && !msg.isEmpty() && gamePackage.getGameState() != null && gamePackage.getGameState().equalsIgnoreCase("quit")) {
@@ -310,16 +310,19 @@ public class QuizGameRedClient extends JFrame{
             JLabel titleLabel = new JLabel("Game result:");
             titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
-            JTextArea resultArea = new JTextArea(msg);
-            resultArea.setAlignmentY(Component.CENTER_ALIGNMENT);
-            resultArea.setEditable(false);
-            resultArea.setFocusable(false);
-            resultArea.setOpaque(false);
-            resultArea.setLineWrap(true);
-            resultArea.setWrapStyleWord(true);
+            JTextPane resultPane = new JTextPane();
+            resultPane.setPreferredSize(new Dimension(400,150));
+            StyledDocument doc = resultPane.getStyledDocument();
+            SimpleAttributeSet set = new SimpleAttributeSet();
+            StyleConstants.setAlignment(set, StyleConstants.ALIGN_CENTER);
+            doc.setParagraphAttributes(0, doc.getLength(), set, false);
+            resultPane.setText(msg);
+            resultPane.setEditable(false);
+            resultPane.setFocusable(false);
+            resultPane.setOpaque(false);
             resultPanel.add(titleLabel, BorderLayout.NORTH);
-            resultPanel.add(resultArea, BorderLayout.CENTER);
-            base.add(resultPanel, BorderLayout.SOUTH);
+            resultPanel.add(resultPane, BorderLayout.CENTER);
+            matchHistoryPanel.add(resultPanel, BorderLayout.SOUTH);
         }
         revalidate();
         repaint();
