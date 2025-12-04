@@ -8,7 +8,7 @@ import java.net.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Chat extends JFrame implements ActionListener {
+public class Chat extends JPanel implements ActionListener {
     private String name;
     private JTextArea chatt = new JTextArea(20, 50);
     private JTextField input = new JTextField();
@@ -24,34 +24,21 @@ public class Chat extends JFrame implements ActionListener {
         this.port = port;
         this.socket = socket;
 
-        setTitle("Chat - " + name);
-        JPanel panel = new JPanel(new BorderLayout());
-        add(panel);
+        setLayout(new BorderLayout());
 
         JScrollPane scroll = new JScrollPane(chatt);
-        panel.add(scroll, BorderLayout.CENTER);
+        add(scroll, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(input, BorderLayout.CENTER);
         bottomPanel.add(sendButton, BorderLayout.EAST);
-        panel.add(bottomPanel, BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         input.addActionListener(this);
         sendButton.addActionListener(this);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                sendMess("LOGOFF:" + name);
-            }
-        });
-
         users.add(name);
         sendMess("LOGON:" + name);
-        setSize(500, 600);
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 
         new Thread(() -> {
             while (true) {
