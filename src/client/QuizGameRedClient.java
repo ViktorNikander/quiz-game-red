@@ -32,6 +32,17 @@ public class QuizGameRedClient extends JFrame{
     private JLabel scoreLabel = new JLabel("Score: 0");
     private boolean identitySet = false;
     private String player = null;
+    private final ImageIcon[] avatars = {
+            null,
+            new ImageIcon("avatar1.png"),
+            new ImageIcon("avatar2.png"),
+            new ImageIcon("avatar3.png"),
+            new ImageIcon("avatar4.png"),
+            new ImageIcon("avatar5.png")
+    };
+    private int avatarIndex = 0;
+    private JButton avatarBtn;
+    private JLabel avatarLabel;
     private final Color[] buttonBackgrounds = {
             Color.WHITE,
             Color.BLUE,
