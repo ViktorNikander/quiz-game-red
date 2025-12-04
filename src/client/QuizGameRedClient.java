@@ -31,11 +31,11 @@ public class QuizGameRedClient extends JFrame{
     private String player = null;
     private final ImageIcon[] avatars = {
             null,
-            new ImageIcon("avatar1.png"),
-            new ImageIcon("avatar2.png"),
-            new ImageIcon("avatar3.png"),
-            new ImageIcon("avatar4.png"),
-            new ImageIcon("avatar5.png")
+            new ImageIcon("src/avatar1.png"),
+            new ImageIcon("src/avatar2.png"),
+            new ImageIcon("src/avatar3.png"),
+            new ImageIcon("src/avatar4.png"),
+            new ImageIcon("src/avatar5.png")
     };
     private int avatarIndex = 0;
     private JButton avatarBtn;
