@@ -141,6 +141,43 @@ public class QuizGameRedClient extends JFrame{
         }
     }
 
+    private void startChat(){
+        try{
+            InetAddress ip = InetAddress.getByName("230.0.0.0");
+            MulticastSocket socket = new MulticastSocket(4444);
+            socket.joinGroup(ip);
+            Chat chatPanel = new Chat(playerName, ip,4444, socket);
+            chatPanel.setPreferredSize(new Dimension(380, 400));
+            sidePanel.add(chatPanel, BorderLayout.CENTER);
+            sidePanel.revalidate();
+            sidePanel.repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void colorManager(Container container){
+        for (Component c : container.getComponents()) {
+            if (c instanceof JButton) {
+                c.setBackground(buttonBackgrounds[colorIndex]);
+                c.setForeground(buttonForegrounds[colorIndex]);
+            } else if (c instanceof Container) {
+                colorManager((Container) c);
+            }
+        }
+    }
+
+    private void colorChanger(){
+        colorIndex = (colorIndex + 1) % buttonBackgrounds.length;
+
+        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
+        colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
+
+        colorManager(this.getContentPane());
+
+        repaint();
+    }
+
     private void chooseSubject() {
         base.removeAll();
 
@@ -262,6 +299,12 @@ public class QuizGameRedClient extends JFrame{
         repaint();
     }
 
+    private void runAfterDelay(int delayMillisec, Runnable action) {
+        javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
+        timer.setRepeats(false);
+        timer.start();
+    }
+
     private void lockButtons(){
         for (Component c : base.getComponents()) {
             if (c instanceof JPanel) {
@@ -336,48 +379,6 @@ public class QuizGameRedClient extends JFrame{
         }
     }
 
-    private void runAfterDelay(int delayMillisec, Runnable action) {
-        javax.swing.Timer timer = new javax.swing.Timer(delayMillisec, e -> action.run());
-        timer.setRepeats(false);
-        timer.start();
-    }
-
-    private void colorManager(Container container){
-        for (Component c : container.getComponents()) {
-            if (c instanceof JButton) {
-                c.setBackground(buttonBackgrounds[colorIndex]);
-                c.setForeground(buttonForegrounds[colorIndex]);
-            } else if (c instanceof Container) {
-                colorManager((Container) c);
-            }
-        }
-    }
-
-    private void colorChanger(){
-        colorIndex = (colorIndex + 1) % buttonBackgrounds.length;
-
-        colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
-        colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
-
-        colorManager(this.getContentPane());
-
-        repaint();
-    }
-
-    private void startChat(){
-        try{
-            InetAddress ip = InetAddress.getByName("230.0.0.0");
-            MulticastSocket socket = new MulticastSocket(4444);
-            socket.joinGroup(ip);
-            Chat chatPanel = new Chat(playerName, ip,4444, socket);
-            chatPanel.setPreferredSize(new Dimension(380, 400));
-            sidePanel.add(chatPanel, BorderLayout.CENTER);
-            sidePanel.revalidate();
-            sidePanel.repaint();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public static void main(String[] args) {
         QuizGameRedClient c = new QuizGameRedClient();
     }
