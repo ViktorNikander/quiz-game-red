@@ -14,9 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.swing.*;
-import javax.net.*;
-import java.awt.*;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
@@ -32,6 +29,17 @@ public class QuizGameRedClient extends JFrame{
     private JLabel scoreLabel = new JLabel("Score: 0");
     private boolean identitySet = false;
     private String player = null;
+    private final ImageIcon[] avatars = {
+            null,
+            new ImageIcon("avatar1.png"),
+            new ImageIcon("avatar2.png"),
+            new ImageIcon("avatar3.png"),
+            new ImageIcon("avatar4.png"),
+            new ImageIcon("avatar5.png")
+    };
+    private int avatarIndex = 0;
+    private JButton avatarBtn;
+    private JLabel avatarLabel;
     private final Color[] buttonBackgrounds = {
             Color.WHITE,
             Color.BLUE,
@@ -58,7 +66,7 @@ public class QuizGameRedClient extends JFrame{
             playerName = "Player";
         }
 
-        setSize(940, 620);
+        setSize(970, 620);
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,18 +86,41 @@ public class QuizGameRedClient extends JFrame{
         mainPanel.add(base, BorderLayout.CENTER);
 
         sidePanel.setPreferredSize(new Dimension(400, 620));
+        JPanel topSidePanel = new JPanel(new BorderLayout());
+        topSidePanel.setPreferredSize(new Dimension(381, 120));
 
-        JPanel colorPanel = new JPanel();
-        colorPanel.setPreferredSize(new Dimension(400, 120));
+        JPanel colorChangeBtnPanel = new JPanel();
+        colorChangeBtnPanel.setPreferredSize(new Dimension(127, 120));
         colorChangeBtn = new JButton("Change Color");
-        colorChangeBtn.setPreferredSize(new Dimension(200,100));
+        colorChangeBtn.setPreferredSize(new Dimension(120,100));
         colorChangeBtn.setBackground(buttonBackgrounds[colorIndex]);
         colorChangeBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         colorChangeBtn.setFocusPainted(false);
         colorChangeBtn.addActionListener(e -> colorChanger());
-        colorPanel.add(colorChangeBtn);
+        colorChangeBtnPanel.add(colorChangeBtn);
 
-        sidePanel.add(colorPanel,BorderLayout.NORTH);
+        JPanel avatarBtnPanel = new JPanel();
+        avatarBtnPanel.setPreferredSize(new Dimension(127, 120));
+        avatarBtn = new JButton("Change Avatar");
+        avatarBtn.setPreferredSize(new Dimension(127, 100));
+        avatarBtn.setBackground(buttonBackgrounds[colorIndex]);
+        avatarBtn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        avatarBtn.setFocusPainted(false);
+        avatarBtn.addActionListener(e -> changeAvatar());
+        avatarBtnPanel.add(avatarBtn);
+
+        JPanel avatarLabelPanel = new JPanel();
+        avatarLabelPanel.setPreferredSize(new Dimension(127, 120));
+        avatarLabel = new JLabel();
+        avatarLabel.setPreferredSize(new Dimension(127, 100));
+        avatarLabel.setHorizontalAlignment(JLabel.CENTER);
+        avatarLabelPanel.add(avatarLabel);
+
+        topSidePanel.add(colorChangeBtnPanel, BorderLayout.WEST);
+        topSidePanel.add(avatarBtnPanel, BorderLayout.CENTER);
+        topSidePanel.add(avatarLabelPanel, BorderLayout.EAST);
+
+        sidePanel.add(topSidePanel,BorderLayout.NORTH);
         startChat();
 
         add(mainPanel,BorderLayout.CENTER);
@@ -147,7 +178,7 @@ public class QuizGameRedClient extends JFrame{
             MulticastSocket socket = new MulticastSocket(4444);
             socket.joinGroup(ip);
             Chat chatPanel = new Chat(playerName, ip,4444, socket);
-            chatPanel.setPreferredSize(new Dimension(380, 400));
+            chatPanel.setPreferredSize(new Dimension(381, 400));
             sidePanel.add(chatPanel, BorderLayout.CENTER);
             sidePanel.revalidate();
             sidePanel.repaint();
@@ -174,6 +205,14 @@ public class QuizGameRedClient extends JFrame{
         colorChangeBtn.setForeground(buttonForegrounds[colorIndex]);
 
         colorManager(this.getContentPane());
+
+        repaint();
+    }
+
+    private void changeAvatar() {
+        avatarIndex = (avatarIndex + 1) % avatars.length;
+
+        avatarLabel.setIcon(avatars[avatarIndex]);
 
         repaint();
     }
